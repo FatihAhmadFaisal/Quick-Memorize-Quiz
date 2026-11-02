@@ -1,4 +1,4 @@
-# AI Study Buddy — v10.1 (Mobile Responsiveness & Touch Optimization)
+# Quick Memorize Quiz — v10.1 (Mobile Responsiveness & Touch Optimization)
 
 Ubah catatan kuliah menjadi **flashcard 3D**, **kuis pilihan ganda**, dan **kuis True / False** langsung di browser. Tidak ada backend; semua pemrosesan berjalan lokal.
 

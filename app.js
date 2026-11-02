@@ -1,7 +1,7 @@
 'use strict';
 
 /* ============================================================
-   AI Study Buddy
+   Quick Memorize Quiz
    ------------------------------------------------------------
    Alur kerja:
    1. Materi diambil dari mode input yang aktif saja: catatan
@@ -185,7 +185,7 @@ const MIN_CARD_TEXT_CHARS = 10;
 
 const TRANSLATIONS = {
   id: {
-    'app.title': 'AI Study Buddy — Catatan Jadi Flashcard & Kuis',
+    'app.title': 'Quick Memorize Quiz — Catatan Jadi Flashcard & Kuis',
     'app.meta': 'Ubah catatan kuliah menjadi flashcard interaktif dan kuis pilihan ganda secara instan.',
     'app.subtitle': 'Catatan kuliah jadi flashcard & kuis dalam sekejap.',
     'app.footer': 'Dibuat untuk belajar lebih cepat. Semua materi diproses langsung di browser.',
@@ -375,7 +375,7 @@ const TRANSLATIONS = {
   },
 
   en: {
-    'app.title': 'AI Study Buddy — Turn Notes into Flashcards & Quizzes',
+    'app.title': 'Quick Memorize Quiz — Turn Notes into Flashcards & Quizzes',
     'app.meta': 'Turn your lecture notes into interactive flashcards and multiple-choice quizzes instantly.',
     'app.subtitle': 'Turn your lecture notes into flashcards & quizzes in seconds.',
     'app.footer': 'Built for faster studying. Everything is processed right in your browser.',
@@ -3651,7 +3651,7 @@ function buildExportData() {
   ).length;
 
   return {
-    app: 'AI Study Buddy',
+    app: 'Quick Memorize Quiz',
     version: EXPORT_VERSION,
     exportedAt: new Date().toISOString(),
     language: lang,
@@ -3718,7 +3718,7 @@ function exportNotes() {
   const link = document.createElement('a');
 
   link.href = url;
-  link.download = `ai-study-buddy-${dateStamp()}.json`;
+  link.download = `quick-memorize-quiz-${dateStamp()}.json`;
   document.body.appendChild(link);
   link.click();
   link.remove();
