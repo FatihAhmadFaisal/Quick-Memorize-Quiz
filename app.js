@@ -449,6 +449,7 @@ const TRANSLATIONS = {
     'match.finish': 'Lihat hasil',
     'match.retryBatch': 'Ulangi sambungan',
     'match.restart': 'Ulangi dari awal',
+    'match.shuffle': 'Acak Cocokkan',
     'match.feedbackAll': 'Semua {n} pasangan benar!',
     'match.feedbackSome': '{correct} dari {n} pasangan benar. Garis merah menunjukkan pasangan yang belum tepat.',
     'match.feedbackReady': 'Semua pertanyaan sudah terhubung. Tekan Periksa Jawaban.',
@@ -753,6 +754,7 @@ const TRANSLATIONS = {
     'match.finish': 'See results',
     'match.retryBatch': 'Redo connections',
     'match.restart': 'Start over',
+    'match.shuffle': 'Shuffle Match',
     'match.feedbackAll': 'All {n} pairs are correct!',
     'match.feedbackSome': '{correct} of {n} pairs are correct. The red lines show the pairs that need another look.',
     'match.feedbackReady': 'Every question is connected. Press Check Answers.',
@@ -871,12 +873,13 @@ const feynmanState = {
 let feynmanHistory = [];
 let feynmanSaveTimer = null;
 
-/* ---------- Status Drag-to-Answer (v13.0) ---------- */
+/* ---------- Status Drag-to-Answer (v13.0–v13.1) ---------- */
 const MATCH_BATCH_SIZE = 5;
 
 const matchState = {
   pairs: [],
   pairMap: new Map(),
+  order: [],
   batches: [],
   batchIndex: 0,
   answerOrder: [],
@@ -1008,6 +1011,7 @@ const els = {
   matchNext: $('#btn-match-next'),
   matchReset: $('#btn-match-reset'),
   matchRestart: $('#btn-match-restart'),
+  matchShuffle: $('#match-shuffle'),
   matchSummaryRing: $('#match-summary-ring'),
   matchSummaryPercent: $('#match-summary-percent'),
   matchSummaryText: $('#match-summary-text'),
@@ -5216,20 +5220,62 @@ function resetMatchSession() {
 
   matchState.pairs = buildMatchPairs(state.cards);
   matchState.pairMap = new Map(matchState.pairs.map((pair) => [pair.id, pair]));
-  matchState.batches = matchState.pairs.length >= 2 ? buildMatchBatches(matchState.pairs) : [];
-  matchState.batchIndex = 0;
-  matchState.answerOrder = [];
+  matchState.order = matchState.pairs.map((pair) => pair.id);
   matchState.links = new Map();
   matchState.checked = false;
   matchState.batchScores = new Map();
   matchState.pendingQuestion = null;
   matchState.summary = false;
 
-  if (matchState.batches.length > 0) {
-    matchState.answerOrder = createMatchAnswerOrder(matchState.batches[0]);
+  rebuildMatchBatches();
+  renderMatch();
+}
+
+/** Susun ulang batch dari urutan soal yang sedang aktif. */
+function rebuildMatchBatches() {
+  const ordered = matchState.order
+    .map((id) => matchState.pairMap.get(id))
+    .filter(Boolean);
+
+  matchState.batches = ordered.length >= 2 ? buildMatchBatches(ordered) : [];
+  matchState.batchIndex = 0;
+  matchState.answerOrder = matchState.batches.length
+    ? createMatchAnswerOrder(matchState.batches[0])
+    : [];
+}
+
+/** Reset progres (skor, sambungan, batch) tanpa mengubah urutan soal. */
+function resetMatchProgress() {
+  cancelMatchDrag();
+
+  matchState.links = new Map();
+  matchState.checked = false;
+  matchState.batchScores = new Map();
+  matchState.pendingQuestion = null;
+  matchState.summary = false;
+
+  rebuildMatchBatches();
+  renderMatch();
+}
+
+/**
+ * Acak urutan pertanyaan sekaligus jawabannya, lalu mulai sesi baru.
+ * Semua pasangan tetap ikut karena batch disusun ulang dari daftar id
+ * yang sama, hanya urutannya berbeda.
+ */
+function shuffleMatch() {
+  if (matchState.pairs.length < 2) return;
+
+  const currentOrder = matchState.order.slice();
+  const nextOrder = shuffleArray(currentOrder);
+
+  // Pastikan urutan pertanyaan benar-benar berubah, bukan kebetulan sama.
+  if (nextOrder.length > 1 && nextOrder.every((id, index) => id === currentOrder[index])) {
+    nextOrder.push(nextOrder.shift());
   }
 
-  renderMatch();
+  matchState.order = nextOrder;
+  resetMatchProgress();
 }
 
 function renderMatch() {
@@ -5241,6 +5287,7 @@ function renderMatch() {
   els.matchEmpty.classList.toggle('hidden', hasPairs);
   els.matchBody.classList.toggle('hidden', !hasPairs || showSummary);
   els.matchSummary.classList.toggle('hidden', !showSummary);
+  if (els.matchShuffle) els.matchShuffle.disabled = !hasPairs;
 
   if (!hasPairs) {
     els.matchQuestions.innerHTML = '';
@@ -5799,7 +5846,8 @@ function initMatchEvents() {
   els.matchCheck.addEventListener('click', checkMatchAnswers);
   els.matchNext.addEventListener('click', nextMatchBatch);
   els.matchReset.addEventListener('click', clearMatchLinks);
-  els.matchRestart.addEventListener('click', resetMatchSession);
+  els.matchRestart.addEventListener('click', resetMatchProgress);
+  els.matchShuffle.addEventListener('click', shuffleMatch);
 
   // Gambar yang selesai dimuat bisa mengubah tinggi kartu.
   els.matchBoard.addEventListener('load', scheduleMatchLines, true);
