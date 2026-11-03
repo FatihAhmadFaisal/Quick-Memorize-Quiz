@@ -1,8 +1,8 @@
-# Quick Memorize Quiz — v12.1 (Feynman Mode dengan Gambar Kartu)
+# Quick Memorize Quiz — v13.0 (Drag-to-Answer)
 
-Ubah catatan kuliah menjadi **flashcard 3D**, **kuis pilihan ganda**, dan **kuis True / False** langsung di browser. Tidak ada backend; semua pemrosesan berjalan lokal.
+Ubah catatan kuliah menjadi **flashcard 3D**, **kuis pilihan ganda**, **kuis True / False**, dan **latihan mencocokkan Drag-to-Answer** langsung di browser. Tidak ada backend; semua pemrosesan berjalan lokal.
 
-Versi 12.1 mempertahankan seluruh fitur v12.0 — termasuk **Metode Feynman** tiga langkah, format teks & matematika dasar, pemilih warna aksen, dukungan foto, dan tata letak seluler — lalu menyempurnakan **Metode Feynman dengan gambar kartu**: saat konsep diambil dari flashcard bergambar, foto pertanyaannya ikut tampil di samping teks konsep pada langkah pemilihan dan penjelasan, serta foto jawabannya tampil di langkah review.
+Versi 13.0 mempertahankan seluruh fitur v12.1 — termasuk **Metode Feynman** tiga langkah dengan gambar kartu, format teks & matematika dasar, pemilih warna aksen, dukungan foto, dan tata letak seluler — lalu menambahkan mode belajar baru **Drag-to-Answer**: pertanyaan di kolom kiri dihubungkan ke jawaban acak di kolom kanan dengan garis yang ditarik memakai mouse atau sentuhan.
 
 ## Fitur
 
@@ -25,6 +25,7 @@ Versi 12.1 mempertahankan seluruh fitur v12.0 — termasuk **Metode Feynman** ti
 - **Metode Feynman (v12.0, disempurnakan di v12.1)** — tab **Feynman** menambahkan alur belajar tiga langkah. **Langkah 1** memilih konsep dari flashcard yang sudah ada atau mengetik konsep baru beserta catatan aslinya. **Langkah 2** meminta penjelasan dengan bahasa sederhana seolah-olah mengajar orang lain, lengkap dengan toolbar format dan penghitung karakter/kata. **Langkah 3** menampilkan penjelasanmu berdampingan dengan catatan asli, analisis celah otomatis (kata kunci yang belum muncul), dan checklist evaluasi mandiri. Hasil latihan bisa disimpan ke riwayat, dimuat kembali, atau dihapus.
 - **Gambar kartu di Feynman (v12.1)** — flashcard bergambar menampilkan foto pertanyaannya di langkah pemilihan konsep dan di samping label konsep pada langkah penjelasan, sedangkan foto jawabannya muncul di kartu **Catatan asli** saat review. Teks kaya dan gambar ditata berdampingan di desktop dan menumpuk dengan rapi di layar sempit, dengan batas tinggi agar tata letak tidak rusak. Kartu tanpa gambar tidak menyisakan ruang kosong sama sekali.
 - **Riwayat Feynman lokal** — draf langkah terakhir dan hingga 30 latihan tersimpan di `localStorage` dengan kunci terpisah, sehingga struktur data catatan v12.0 dan file ekspor tidak berubah. Draf dipulihkan saat halaman dibuka kembali, dan setiap latihan menyimpan konsep, penjelasan, catatan asli, checklist, kata kunci yang belum muncul, serta waktu pembuatan.
+- **Drag-to-Answer (v13.0)** — tab **Cocokkan** menampilkan pertanyaan sesuai urutan input di kolom kiri dan jawaban yang diacak di kolom kanan. Tarik dari titik di sisi pertanyaan ke titik di sisi jawaban, atau ketuk pertanyaan lalu ketuk jawabannya. Setiap pertanyaan hanya boleh terhubung ke satu jawaban, dan memakai jawaban yang sudah terpakai akan memindahkan sambungan lama. Materi dibagi menjadi batch maksimal lima pasangan; sisa batch terakhir tidak pernah berisi satu soal (contoh: 6 soal menjadi 4 + 2, 7 soal menjadi 5 + 2, 11 soal menjadi 5 + 4 + 2). Tombol **Periksa Jawaban** baru aktif setelah semua pertanyaan di batch terhubung, lalu garis dan kartu berubah hijau/merah sebagai umpan balik. Setelah semua batch selesai, muncul ringkasan skor total dengan tombol ulangi. Latihan ini hanya membaca `state.cards`, jadi tidak menambah data baru ke penyimpanan.
 - **Format teks & matematika dasar (v11.0)** — teks istilah, penjelasan, pertanyaan, opsi jawaban, pembahasan, pernyataan T/F, penjelasan Feynman, dan catatan asli Feynman mendukung **tebal**, *miring*, pangkat, dan indeks. Tulis `**tebal**`, `*miring*`, `x^2`, `H_2O`, `x^{n+1}`, atau `H_{2}O`; tag `<b>`, `<i>`, `<strong>`, `<em>`, `<sup>`, dan `<sub>` juga dikenali. Di **Formulir Soal** dan **Feynman**, setiap area teks punya tombol format **B**, *I*, x², dan x₂ yang membungkus teks terpilih secara instan (tekan tombol yang sama lagi untuk melepasnya). Format disimpan sebagai teks biasa, jadi data lama tetap kompatibel dan file JSON tidak berubah skemanya.
 - **Render aman (anti-XSS)** — semua teks di-escape lebih dulu, lalu hanya tag format di atas yang diizinkan kembali. Tag lain seperti `<script>`, atribut event, atau `<img onerror>` tetap tampil sebagai teks biasa. Sintaks ringan diterjemahkan setelah escaping, sehingga tidak ada input pengguna yang bisa menyuntikkan HTML berbahaya.
 - **Tampilan seluler & target sentuh (v10.1)** — header, toggle ID/EN, pemilih tema, indikator kartu/soal, dan kontrol kuis otomatis turun ke baris sendiri pada layar sempit tanpa saling menumpuk. Tab utama memenuhi lebar layar, tombol aksi hasil kuis tersusun vertikal, dan seluruh kontrol interaktif — unggah/hapus foto, tombol format, hapus baris, opsi tema, tab, timer, navigasi kartu, serta tombol jawaban — memiliki target sentuh minimal 44 px. Menu tema dan timer dibatasi agar tetap berada di dalam viewport, dan ukuran huruf input dinaikkan saat mode seluler untuk mencegah zoom otomatis iOS.
@@ -53,8 +54,9 @@ Preferensi disimpan di `localStorage` dengan kunci `ai-study-buddy.theme`. Skrip
 Mulai v10.1, aplikasi tetap nyaman dipakai di ponsel Android dan iOS:
 
 - Header dan kontrolnya menjadi satu kolom penuh pada layar kecil; toggle **ID/EN**, pemilih tema, dan statistik tidak lagi bertumpuk.
-- Tab **Flashcard / Kuis / True / False / Feynman** memenuhi lebar layar dengan tinggi sentuh yang cukup, dan tombol hasil kuis tersusun vertikal.
+- Tab **Flashcard / Kuis / True / False / Cocokkan / Feynman** memenuhi lebar layar dengan tinggi sentuh yang cukup, dan tombol hasil kuis tersusun vertikal.
 - Langkah Feynman, tombol sumber konsep, tombol riwayat, dan tombol aksi review memiliki target sentuh minimal 44 px; dua kartu perbandingan otomatis menumpuk satu kolom.
+- Pada **Cocokkan**, kolom pertanyaan dan jawaban tetap berdampingan dengan jarak yang cukup agar area sentuh titik sambung tidak saling menimpa; judul, chip batch, dan tombol aksi turun ke baris sendiri, sedangkan tombol periksa/berikutnya memenuhi lebar layar. Di layar sangat sempit, jarak kolom dan ukuran titik dirapatkan agar kata tidak terpotong di tengah.
 - Tombol bahasa, tema, timer, acak, navigasi kartu, jawaban kuis, unggah foto, hapus foto, dan hapus baris memiliki target sentuh minimal 44 px.
 - Menu warna tema dan menu durasi timer diposisikan ulang serta dibatasi lebarnya agar tidak terpotong di tepi layar.
 - Kolom teks memakai ukuran huruf 16 px pada layar kecil supaya iOS tidak memperbesar halaman saat kolom difokuskan.
@@ -78,9 +80,9 @@ Lalu buka `http://127.0.0.1:8000`.
 
 | File | Isi |
 | --- | --- |
-| `index.html` | Struktur halaman, tab mode input, formulir soal dinamis, flashcard, kuis pilihan ganda, kuis True / False, panel Feynman tiga langkah beserta pratinjau gambar kartu, kontrol timer, pemilih warna aksen, dan tombol penyimpanan |
-| `style.css` | Gaya kustom: token warna aksen dan 14 tema, panel, tab mode, baris formulir, toolbar format teks, alur dan riwayat Feynman, pratinjau gambar kartu yang responsif, kontrol foto, tombol, kartu 3D, kuis, pilihan benar/salah, streak, cincin timer, konfeti, status simpan, serta aturan responsif dan target sentuh seluler |
-| `app.js` | Parsing catatan, formulir terstruktur, toolbar format, render rich text + sanitasi, unggah dan kompresi foto, validasi, penyusunan kartu/kuis/TF, alur Feynman + gambar kartu + analisis celah + riwayat lokal, pengacakan lewat tombol Acak, timer kuis, streak, konfeti, i18n, tema aksen, auto-save, ekspor/impor |
+| `index.html` | Struktur halaman, tab mode input, formulir soal dinamis, flashcard, kuis pilihan ganda, kuis True / False, papan **Cocokkan** dua kolom dengan lapisan SVG, panel Feynman tiga langkah beserta pratinjau gambar kartu, kontrol timer, pemilih warna aksen, dan tombol penyimpanan |
+| `style.css` | Gaya kustom: token warna aksen dan 14 tema, panel, tab mode, baris formulir, toolbar format teks, alur dan riwayat Feynman, pratinjau gambar kartu yang responsif, papan Drag-to-Answer beserta titik sambung, garis SVG, dan umpan balik hijau/merah, kontrol foto, tombol, kartu 3D, kuis, pilihan benar/salah, streak, cincin timer, konfeti, status simpan, serta aturan responsif dan target sentuh seluler |
+| `app.js` | Parsing catatan, formulir terstruktur, toolbar format, render rich text + sanitasi, unggah dan kompresi foto, validasi, penyusunan kartu/kuis/TF, alur Feynman + gambar kartu + analisis celah + riwayat lokal, mesin Drag-to-Answer (pasangan, batch, sambungan pointer/ketuk, penilaian), pengacakan lewat tombol Acak, timer kuis, streak, konfeti, i18n, tema aksen, auto-save, ekspor/impor |
 
 ## Format input
 
@@ -156,6 +158,22 @@ Gambar hanya ditampilkan untuk konsep yang berasal dari flashcard. Konsep yang d
 
 Latihan bisa disimpan ke **Riwayat latihan** (maksimal 30 entri). Setiap entri bisa dimuat kembali ke langkah review atau dihapus. Draf dan riwayat disimpan di kunci `ai-study-buddy.feynman`, terpisah dari catatan materi, sehingga impor/ekspor JSON dan data versi sebelumnya tidak terpengaruh. Tombol **Hapus semua** membersihkan draf dan riwayat ini juga.
 
+## Drag-to-Answer
+
+Tab **Cocokkan** melatih ingatan dengan cara yang berbeda: kamu harus menghubungkan pertanyaan dengan jawaban yang posisinya sudah diacak.
+
+1. **Hubungkan pasangan** — pertanyaan tampil berurutan di kolom kiri, jawaban diacak di kolom kanan. Tarik dari titik di sisi kanan pertanyaan ke titik di sisi kiri jawaban, atau ketuk pertanyaan lalu ketuk jawabannya. Garis penghubung digambar sebagai SVG dan mengikuti warna aksen aktif.
+2. **Periksa jawaban** — tombol **Periksa Jawaban** baru bisa ditekan setelah semua pertanyaan di batch terhubung. Setelah diperiksa, pasangan benar berubah hijau dan pasangan salah berubah merah, begitu pula garis penghubungnya. Skor batch langsung ditambahkan ke total.
+3. **Lanjut batch** — materi dibagi menjadi batch maksimal lima pasangan. Batch terakhir selalu berisi minimal dua pasangan, jadi tidak ada batch yang hanya berisi satu soal. Setelah batch terakhir, muncul ringkasan persentase dan jumlah pasangan yang benar.
+
+Aturan dan detail:
+
+- Setiap pertanyaan hanya boleh terhubung ke satu jawaban. Memilih jawaban yang sudah dipakai pertanyaan lain akan melepaskan sambungan lama, sehingga hubungan tetap satu-satu.
+- **Ulangi sambungan** menghapus semua garis di batch aktif tanpa mengubah skor batch lain; **Ulangi dari awal** memulai sesi baru dengan pengacakan ulang.
+- Titik sambung punya area sentuh yang lebih besar dari tampilan visualnya, dan papan menjaga jarak antar kolom agar area tersebut tidak bertumpuk di ponsel.
+- Jawaban bisa berupa teks, foto, atau keduanya. Format teks kaya seperti `**tebal**` dan `x^2` ikut dirender, dan kartu bergambar menampilkan thumbnail.
+- Mode ini hanya membaca flashcard yang sudah ada. Tidak ada data baru yang ditulis ke `localStorage`, dan skema catatan maupun file ekspor tidak berubah.
+
 ## Penyimpanan
 
 - `ai-study-buddy.notes` — data terakhir dalam format JSON `{ version: 5, inputMode, notes, structured, updatedAt }`
@@ -172,7 +190,7 @@ Latihan bisa disimpan ke **Riwayat latihan** (maksimal 30 entri). Setiap entri b
 
 File ekspor memakai skema **versi 9** dan berisi `inputMode`, `notes`, `structured`, `cards`, `quiz`, `trueFalse`, serta `summary` (jumlah kartu/soal, jawaban terisi, skor, jumlah soal True / False, dan jumlah baris terstruktur yang lengkap). Setiap kartu, soal, opsi, dan pernyataan T/F menyertakan foto (`termImage`, `definitionImage`, `noteImage`, `correctTermImage`) bila ada. Setiap kartu menyertakan `sourceMode` (`paste` atau `structured`), dan setiap soal kuis menyertakan status `timedOut`. Ukuran file impor maksimal 12 MB agar ekspor berisi beberapa foto tetap bisa dimuat.
 
-Skema penyimpanan catatan dan ekspor tidak berubah di v12.1. Riwayat Feynman memakai kunci sendiri dan tidak dimasukkan ke file ekspor materi. Sintaks format seperti `**tebal**` atau `H_2O` disimpan sebagai teks biasa, sehingga file lama tetap terbaca dan file baru tetap bisa dibuka di versi sebelumnya (format hanya akan tampil sebagai teks biasa).
+Skema penyimpanan catatan dan ekspor tidak berubah di v13.0. Riwayat Feynman memakai kunci sendiri dan tidak dimasukkan ke file ekspor materi. Mode Drag-to-Answer juga tidak menambah kunci atau field baru karena hanya membaca flashcard yang sedang aktif. Sintaks format seperti `**tebal**` atau `H_2O` disimpan sebagai teks biasa, sehingga file lama tetap terbaca dan file baru tetap bisa dibuka di versi sebelumnya (format hanya akan tampil sebagai teks biasa).
 
 Saat impor:
 

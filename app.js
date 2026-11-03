@@ -295,10 +295,12 @@ const TRANSLATIONS = {
     'empty.f2': '<strong class="font-semibold text-slate-700">Kuis pilihan ganda.</strong> Lengkap dengan pembahasan.',
     'empty.f3': '<strong class="font-semibold text-slate-700">Skor otomatis.</strong> Pantau hasil belajarmu.',
     'empty.f4': '<strong class="font-semibold text-slate-700">Metode Feynman.</strong> Jelaskan konsep dengan bahasamu sendiri.',
+    'empty.f5': '<strong class="font-semibold text-slate-700">Drag-to-Answer.</strong> Tarik garis untuk mencocokkan pertanyaan dan jawaban.',
 
     'tabs.cards': 'Flashcard',
     'tabs.quiz': 'Kuis',
     'tabs.tf': 'True / False',
+    'tabs.match': 'Cocokkan',
     'tabs.feynman': 'Feynman',
     'tabs.aria': 'Mode belajar',
     'action.new': 'Catatan baru',
@@ -430,6 +432,36 @@ const TRANSLATIONS = {
     'tf.explainFalse': 'Pernyataan itu salah. Penjelasan tersebut sebenarnya milik “{correctTerm}”.',
     'tf.resultLabel': 'Hasil True / False',
     'tf.retry': 'Ulangi kuis T/F',
+
+    'match.label': 'Drag-to-Answer',
+    'match.title': 'Tarik garis, cocokkan pasangan',
+    'match.desc': 'Hubungkan pertanyaan di kiri dengan jawaban acak di kanan. Tarik dari titik pertanyaan ke titik jawaban, atau ketuk pertanyaan lalu ketuk jawabannya.',
+    'match.instructions': 'Tarik dari titik di kanan pertanyaan ke titik di kiri jawaban.',
+    'match.batch': 'Batch {i} / {n}',
+    'match.pairs': '{n} pasangan',
+    'match.questionsAria': 'Pertanyaan',
+    'match.answersAria': 'Jawaban acak',
+    'match.connectQuestion': 'Hubungkan pertanyaan: {text}',
+    'match.connectAnswer': 'Pilih jawaban: {text}',
+    'match.pending': 'Pertanyaan dipilih. Sekarang ketuk atau tarik ke jawaban yang cocok.',
+    'match.check': 'Periksa Jawaban',
+    'match.next': 'Batch berikutnya →',
+    'match.finish': 'Lihat hasil',
+    'match.retryBatch': 'Ulangi sambungan',
+    'match.restart': 'Ulangi dari awal',
+    'match.feedbackAll': 'Semua {n} pasangan benar!',
+    'match.feedbackSome': '{correct} dari {n} pasangan benar. Garis merah menunjukkan pasangan yang belum tepat.',
+    'match.feedbackReady': 'Semua pertanyaan sudah terhubung. Tekan Periksa Jawaban.',
+    'match.score': '{n} benar',
+    'match.emptyTitle': 'Cocokkan belum bisa dibuat',
+    'match.emptyDesc': 'Butuh minimal dua pasangan pertanyaan dan jawaban. Buat flashcard dengan format Istilah: penjelasan terlebih dahulu.',
+    'match.summaryLabel': 'Hasil Drag-to-Answer',
+    'match.summaryTitle': 'Sesi selesai!',
+    'match.summaryText': '{correct} dari {total} pasangan berhasil dicocokkan dengan benar.',
+    'match.imageOnly': 'Gambar tanpa teks',
+    'match.questionImageAlt': 'Gambar pertanyaan',
+    'match.answerImageAlt': 'Gambar jawaban',
+    'match.noPairs': 'Butuh 2 pasangan',
 
     'timer.button': 'Atur timer kuis',
     'timer.menu': 'Pilih durasi timer',
@@ -567,10 +599,12 @@ const TRANSLATIONS = {
     'empty.f2': '<strong class="font-semibold text-slate-700">Multiple-choice quiz.</strong> Complete with explanations.',
     'empty.f3': '<strong class="font-semibold text-slate-700">Automatic scoring.</strong> See how well you did.',
     'empty.f4': '<strong class="font-semibold text-slate-700">Feynman technique.</strong> Explain concepts in your own words.',
+    'empty.f5': '<strong class="font-semibold text-slate-700">Drag-to-Answer.</strong> Draw lines to match questions with answers.',
 
     'tabs.cards': 'Flashcards',
     'tabs.quiz': 'Quiz',
     'tabs.tf': 'True / False',
+    'tabs.match': 'Match',
     'tabs.feynman': 'Feynman',
     'tabs.aria': 'Study mode',
     'action.new': 'New notes',
@@ -703,6 +737,36 @@ const TRANSLATIONS = {
     'tf.resultLabel': 'True / False result',
     'tf.retry': 'Retry T/F quiz',
 
+    'match.label': 'Drag-to-Answer',
+    'match.title': 'Draw a line, match the pair',
+    'match.desc': 'Connect the questions on the left with the shuffled answers on the right. Drag from a question dot to an answer dot, or tap a question then tap its answer.',
+    'match.instructions': 'Drag from the dot on the right of a question to the dot on the left of an answer.',
+    'match.batch': 'Batch {i} / {n}',
+    'match.pairs': '{n} pairs',
+    'match.questionsAria': 'Questions',
+    'match.answersAria': 'Shuffled answers',
+    'match.connectQuestion': 'Connect the question: {text}',
+    'match.connectAnswer': 'Choose the answer: {text}',
+    'match.pending': 'Question selected. Now tap or drag to its matching answer.',
+    'match.check': 'Check Answers',
+    'match.next': 'Next batch →',
+    'match.finish': 'See results',
+    'match.retryBatch': 'Redo connections',
+    'match.restart': 'Start over',
+    'match.feedbackAll': 'All {n} pairs are correct!',
+    'match.feedbackSome': '{correct} of {n} pairs are correct. The red lines show the pairs that need another look.',
+    'match.feedbackReady': 'Every question is connected. Press Check Answers.',
+    'match.score': '{n} correct',
+    'match.emptyTitle': 'Matching cannot be created yet',
+    'match.emptyDesc': 'You need at least two question-and-answer pairs. Create flashcards in the Term: explanation format first.',
+    'match.summaryLabel': 'Drag-to-Answer result',
+    'match.summaryTitle': 'Session complete!',
+    'match.summaryText': 'You matched {correct} of {total} pairs correctly.',
+    'match.imageOnly': 'Image without text',
+    'match.questionImageAlt': 'Question image',
+    'match.answerImageAlt': 'Answer image',
+    'match.noPairs': 'Need 2 pairs',
+
     'timer.button': 'Set quiz timer',
     'timer.menu': 'Choose timer duration',
     'timer.menuTitle': 'Timer duration',
@@ -807,6 +871,25 @@ const feynmanState = {
 let feynmanHistory = [];
 let feynmanSaveTimer = null;
 
+/* ---------- Status Drag-to-Answer (v13.0) ---------- */
+const MATCH_BATCH_SIZE = 5;
+
+const matchState = {
+  pairs: [],
+  pairMap: new Map(),
+  batches: [],
+  batchIndex: 0,
+  answerOrder: [],
+  links: new Map(),
+  checked: false,
+  batchScores: new Map(),
+  pendingQuestion: null,
+  drag: null,
+  summary: false,
+};
+
+let matchLineFrame = null;
+
 // Kata umum yang tidak perlu dianggap sebagai celah pemahaman.
 const FEYNMAN_STOPWORDS = new Set([
   'yang', 'dengan', 'untuk', 'dari', 'pada', 'adalah', 'dalam', 'akan', 'atau',
@@ -870,6 +953,7 @@ const els = {
   tabCards: $('#tab-cards'),
   tabQuiz: $('#tab-quiz'),
   tabTf: $('#tab-tf'),
+  tabMatch: $('#tab-match'),
   tabFeynman: $('#tab-feynman'),
 
   feynmanSteps: Array.from(document.querySelectorAll('.feynman-step-pill')),
@@ -909,6 +993,24 @@ const els = {
   feynmanPrev3: $('#feynman-prev-3'),
   feynmanSave: $('#feynman-save'),
   feynmanRestart: $('#feynman-restart'),
+
+  matchEmpty: $('#match-empty'),
+  matchBody: $('#match-body'),
+  matchSummary: $('#match-summary'),
+  matchBatchInfo: $('#match-batch-info'),
+  matchScore: $('#match-score'),
+  matchBoard: $('#match-board'),
+  matchQuestions: $('#match-questions'),
+  matchAnswers: $('#match-answers'),
+  matchOverlay: $('#match-overlay'),
+  matchFeedback: $('#match-feedback'),
+  matchCheck: $('#btn-match-check'),
+  matchNext: $('#btn-match-next'),
+  matchReset: $('#btn-match-reset'),
+  matchRestart: $('#btn-match-restart'),
+  matchSummaryRing: $('#match-summary-ring'),
+  matchSummaryPercent: $('#match-summary-percent'),
+  matchSummaryText: $('#match-summary-text'),
 
   cardCounter: $('#card-counter'),
   cardProgress: $('#card-progress'),
@@ -3483,14 +3585,17 @@ function switchTab(tabName) {
   els.tabCards.classList.toggle('hidden', tabName !== 'cards');
   els.tabQuiz.classList.toggle('hidden', tabName !== 'quiz');
   els.tabTf.classList.toggle('hidden', tabName !== 'tf');
+  els.tabMatch.classList.toggle('hidden', tabName !== 'match');
   els.tabFeynman.classList.toggle('hidden', tabName !== 'feynman');
 
   if (tabName !== 'quiz') resetTimer(quizTimer);
   if (tabName !== 'tf') resetTimer(tfTimer);
+  if (tabName !== 'match') cancelMatchDrag();
 
   closeAllTimerMenus();
   if (tabName === 'quiz') syncTimerAvailability(quizTimer);
   if (tabName === 'tf') syncTimerAvailability(tfTimer);
+  if (tabName === 'match') renderMatch();
   if (tabName === 'feynman') renderFeynman();
 }
 
@@ -3500,6 +3605,7 @@ function renderWorkspace() {
   els.studyEmpty.classList.toggle('hidden', hasCards);
   els.studyPanels.classList.toggle('hidden', !hasCards);
   updateStats();
+  resetMatchSession();
   els.cardShuffle.disabled = state.cards.length < 2;
   els.quizShuffle.disabled = state.quiz.length < 2;
   els.btnShuffleResult.disabled = state.quiz.length < 2;
@@ -3756,6 +3862,7 @@ function applyLanguage(nextLang, options = {}) {
   updateCounters();
   updateStats();
   renderFeynman();
+  renderMatch();
   setLoading(state.loading);
 
   if (state.cards.length > 0) {
@@ -4995,6 +5102,7 @@ function startOver() {
   els.studyPanels.classList.add('hidden');
   els.studyEmpty.classList.remove('hidden');
   updateStats();
+  resetMatchSession();
   renderFeynman();
   focusActiveInput();
 }
@@ -5010,6 +5118,696 @@ function retryQuiz() {
 function retryTf() {
   resetTf();
   renderTfQuestion();
+}
+
+/* ============================================================
+   Drag-to-Answer / Matching (v13.0)
+   ============================================================ */
+
+function currentMatchBatch() {
+  return matchState.batches[matchState.batchIndex] || [];
+}
+
+/**
+ * Kunci jawaban untuk penilaian. Formulir soal mengizinkan dua istilah
+ * berbeda memiliki penjelasan yang sama persis, jadi kecocokan dihitung
+ * dari isi jawaban, bukan hanya id pasangannya.
+ */
+function matchAnswerKey(pair) {
+  if (!pair) return '';
+  return valueKey(pair.answer, pair.answerImage);
+}
+
+function isMatchCorrect(questionId, answerId) {
+  if (!questionId || !answerId) return false;
+  if (questionId === answerId) return true;
+
+  const questionPair = matchState.pairMap.get(questionId);
+  const answerPair = matchState.pairMap.get(answerId);
+  const key = matchAnswerKey(questionPair);
+
+  return key !== '' && key === matchAnswerKey(answerPair);
+}
+
+/** Buat pasangan unik dari flashcard yang sudah ada. */
+function buildMatchPairs(cards) {
+  const seen = new Set();
+  const pairs = [];
+
+  cards.forEach((card) => {
+    if (!card) return;
+
+    const question = String(card.term ?? '').trim();
+    const answer = String(card.definition ?? card.source ?? '').trim();
+    const questionImage = normalizeImageValue(card.termImage);
+    const answerImage = normalizeImageValue(card.definitionImage);
+
+    if (!question && !answer && !questionImage && !answerImage) return;
+
+    const key = questionKey(question, questionImage, answer, answerImage);
+    if (seen.has(key)) return;
+    seen.add(key);
+
+    pairs.push({
+      id: `pair-${pairs.length}`,
+      question,
+      answer,
+      questionImage,
+      answerImage,
+    });
+  });
+
+  return pairs;
+}
+
+/**
+ * Bagi soal per batch maksimal lima. Kalau sisa terakhir hanya satu,
+ * pindahkan satu soal dari batch sebelumnya agar tetap minimal dua.
+ */
+function buildMatchBatches(pairs) {
+  const batches = [];
+
+  for (let index = 0; index < pairs.length; index += MATCH_BATCH_SIZE) {
+    batches.push(pairs.slice(index, index + MATCH_BATCH_SIZE));
+  }
+
+  if (batches.length > 1 && batches[batches.length - 1].length < 2) {
+    const last = batches[batches.length - 1];
+    const previous = batches[batches.length - 2];
+    last.unshift(previous.pop());
+  }
+
+  return batches;
+}
+
+/** Acak urutan jawaban, tetapi hindari urutan yang sama persis dengan soal. */
+function createMatchAnswerOrder(batch) {
+  const order = shuffleArray(batch.map((pair) => pair.id));
+
+  if (order.length > 1 && order.every((id, index) => id === batch[index].id)) {
+    order.push(order.shift());
+  }
+
+  return order;
+}
+
+function resetMatchSession() {
+  cancelMatchDrag();
+
+  matchState.pairs = buildMatchPairs(state.cards);
+  matchState.pairMap = new Map(matchState.pairs.map((pair) => [pair.id, pair]));
+  matchState.batches = matchState.pairs.length >= 2 ? buildMatchBatches(matchState.pairs) : [];
+  matchState.batchIndex = 0;
+  matchState.answerOrder = [];
+  matchState.links = new Map();
+  matchState.checked = false;
+  matchState.batchScores = new Map();
+  matchState.pendingQuestion = null;
+  matchState.summary = false;
+
+  if (matchState.batches.length > 0) {
+    matchState.answerOrder = createMatchAnswerOrder(matchState.batches[0]);
+  }
+
+  renderMatch();
+}
+
+function renderMatch() {
+  if (!els.tabMatch) return;
+
+  const hasPairs = matchState.pairs.length >= 2 && matchState.batches.length > 0;
+  const showSummary = hasPairs && matchState.summary;
+
+  els.matchEmpty.classList.toggle('hidden', hasPairs);
+  els.matchBody.classList.toggle('hidden', !hasPairs || showSummary);
+  els.matchSummary.classList.toggle('hidden', !showSummary);
+
+  if (!hasPairs) {
+    els.matchQuestions.innerHTML = '';
+    els.matchAnswers.innerHTML = '';
+    els.matchOverlay.innerHTML = '';
+    if (els.matchBatchInfo) {
+      els.matchBatchInfo.textContent = t('match.noPairs');
+      els.matchBatchInfo.classList.remove('hidden');
+    }
+    if (els.matchScore) els.matchScore.classList.add('hidden');
+    return;
+  }
+
+  if (showSummary) {
+    renderMatchSummary();
+    return;
+  }
+
+  if (matchState.batchIndex >= matchState.batches.length) {
+    matchState.batchIndex = 0;
+  }
+  if (!matchState.answerOrder.length) {
+    matchState.answerOrder = createMatchAnswerOrder(currentMatchBatch());
+  }
+
+  renderMatchBatch();
+}
+
+function renderMatchBatch() {
+  const batch = currentMatchBatch();
+  if (!batch.length) return;
+
+  cancelMatchDrag();
+  matchState.pendingQuestion = null;
+
+  els.matchQuestions.innerHTML = batch.map(matchQuestionMarkup).join('');
+  els.matchAnswers.innerHTML = matchState.answerOrder
+    .map((id) => matchState.pairMap.get(id))
+    .filter(Boolean)
+    .map(matchAnswerMarkup)
+    .join('');
+
+  updateMatchHeader(batch);
+  syncMatchUi();
+}
+
+function matchThumbMarkup(image, alt) {
+  return imageMarkup(image, { alt, className: 'match-thumb' });
+}
+
+function matchTextMarkup(value) {
+  const text = String(value ?? '').trim();
+  return text
+    ? formatRichText(text)
+    : `<span class="match-muted">${escapeHtml(t('match.imageOnly'))}</span>`;
+}
+
+function matchAriaText(value) {
+  const text = richTextToText(value);
+  if (!text) return t('match.imageOnly');
+  return text.length > 70 ? `${text.slice(0, 67)}…` : text;
+}
+
+function matchQuestionMarkup(pair) {
+  const label = escapeHtml(t('match.connectQuestion', { text: matchAriaText(pair.question) }));
+
+  return `
+    <div class="match-item match-question" data-question-id="${pair.id}">
+      <div class="match-content">
+        ${matchThumbMarkup(pair.questionImage, t('match.questionImageAlt'))}
+        <div class="match-text rich-text">${matchTextMarkup(pair.question)}</div>
+      </div>
+      <button
+        type="button"
+        class="match-anchor match-anchor--question"
+        data-anchor-question="${pair.id}"
+        aria-label="${label}"
+        aria-pressed="false"
+      >
+        <span class="match-anchor-dot" aria-hidden="true"></span>
+      </button>
+    </div>`;
+}
+
+function matchAnswerMarkup(pair) {
+  const label = escapeHtml(t('match.connectAnswer', { text: matchAriaText(pair.answer) }));
+
+  return `
+    <div class="match-item match-answer" data-answer-id="${pair.id}">
+      <button
+        type="button"
+        class="match-anchor match-anchor--answer"
+        data-anchor-answer="${pair.id}"
+        aria-label="${label}"
+      >
+        <span class="match-anchor-dot" aria-hidden="true"></span>
+      </button>
+      <div class="match-content">
+        ${matchThumbMarkup(pair.answerImage, t('match.answerImageAlt'))}
+        <div class="match-text rich-text">${matchTextMarkup(pair.answer)}</div>
+      </div>
+    </div>`;
+}
+
+function updateMatchHeader(batch) {
+  if (!els.matchBatchInfo) return;
+
+  els.matchBatchInfo.textContent = `${t('match.batch', {
+    i: matchState.batchIndex + 1,
+    n: matchState.batches.length,
+  })} · ${t('match.pairs', { n: batch.length })}`;
+  els.matchBatchInfo.classList.remove('hidden');
+  updateMatchScore();
+}
+
+function syncMatchUi() {
+  const batch = currentMatchBatch();
+  if (!batch.length || !els.matchQuestions || !els.matchAnswers) return;
+
+  const answerOwners = new Map();
+  matchState.links.forEach((answerId, questionId) => {
+    answerOwners.set(answerId, questionId);
+  });
+
+  els.matchQuestions.querySelectorAll('.match-item').forEach((item) => {
+    const questionId = item.dataset.questionId;
+    const answerId = matchState.links.get(questionId);
+    const linked = Boolean(answerId);
+    const correct = linked && matchState.checked && isMatchCorrect(questionId, answerId);
+
+    item.classList.toggle('is-linked', linked);
+    item.classList.toggle('is-correct', correct);
+    item.classList.toggle('is-wrong', linked && matchState.checked && !correct);
+
+    const anchor = item.querySelector('.match-anchor');
+    if (anchor) {
+      const pending = matchState.pendingQuestion === questionId;
+      anchor.classList.toggle('is-pending', pending);
+      anchor.setAttribute('aria-pressed', String(pending));
+      anchor.disabled = matchState.checked;
+    }
+  });
+
+  els.matchAnswers.querySelectorAll('.match-item').forEach((item) => {
+    const answerId = item.dataset.answerId;
+    const questionId = answerOwners.get(answerId);
+    const linked = Boolean(questionId);
+    const correct = linked && matchState.checked && isMatchCorrect(questionId, answerId);
+
+    item.classList.toggle('is-linked', linked);
+    item.classList.toggle('is-correct', correct);
+    item.classList.toggle('is-wrong', linked && matchState.checked && !correct);
+
+    const anchor = item.querySelector('.match-anchor');
+    if (anchor) anchor.disabled = matchState.checked;
+  });
+
+  updateMatchControls(batch);
+  updateMatchFeedback(batch);
+  updateMatchScore();
+  scheduleMatchLines();
+}
+
+function updateMatchControls(batch) {
+  const allLinked = batch.every((pair) => matchState.links.has(pair.id));
+  const isLast = matchState.batchIndex >= matchState.batches.length - 1;
+
+  if (els.matchCheck) {
+    els.matchCheck.disabled = matchState.checked || !allLinked;
+    els.matchCheck.classList.toggle('hidden', matchState.checked);
+  }
+
+  if (els.matchNext) {
+    els.matchNext.classList.toggle('hidden', !matchState.checked);
+    els.matchNext.textContent = isLast ? t('match.finish') : t('match.next');
+  }
+
+  if (els.matchReset) {
+    els.matchReset.disabled = matchState.links.size === 0 && !matchState.checked;
+  }
+}
+
+function updateMatchFeedback(batch) {
+  if (!els.matchFeedback) return;
+
+  let text = '';
+  let tone = '';
+  const allLinked = batch.every((pair) => matchState.links.has(pair.id));
+
+  if (matchState.checked) {
+    const correct = matchState.batchScores.get(matchState.batchIndex) || 0;
+    text = correct === batch.length
+      ? t('match.feedbackAll', { n: batch.length })
+      : t('match.feedbackSome', { correct, n: batch.length });
+    tone = correct === batch.length ? 'is-correct' : 'is-wrong';
+  } else if (matchState.pendingQuestion) {
+    text = t('match.pending');
+    tone = 'is-info';
+  } else if (allLinked) {
+    text = t('match.feedbackReady');
+    tone = 'is-info';
+  }
+
+  els.matchFeedback.textContent = text;
+  els.matchFeedback.classList.toggle('hidden', !text);
+  els.matchFeedback.classList.remove('is-correct', 'is-wrong', 'is-info');
+  if (tone) els.matchFeedback.classList.add(tone);
+}
+
+function updateMatchScore() {
+  if (!els.matchScore) return;
+
+  const correct = Array.from(matchState.batchScores.values())
+    .reduce((sum, value) => sum + value, 0);
+  const hasScore = matchState.batchScores.size > 0;
+
+  els.matchScore.textContent = t('match.score', { n: correct });
+  els.matchScore.classList.toggle('hidden', !hasScore);
+}
+
+function renderMatchSummary() {
+  const total = matchState.pairs.length;
+  const correct = Array.from(matchState.batchScores.values())
+    .reduce((sum, value) => sum + value, 0);
+  const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
+
+  if (els.matchSummaryPercent) {
+    els.matchSummaryPercent.textContent = `${percent}%`;
+  }
+  if (els.matchSummaryRing) {
+    els.matchSummaryRing.style.setProperty('--p', String(percent));
+  }
+  if (els.matchSummaryText) {
+    els.matchSummaryText.textContent = t('match.summaryText', { correct, total });
+  }
+  if (els.matchBatchInfo) {
+    els.matchBatchInfo.textContent = t('match.batch', {
+      i: matchState.batches.length,
+      n: matchState.batches.length,
+    });
+    els.matchBatchInfo.classList.remove('hidden');
+  }
+
+  updateMatchScore();
+}
+
+function scheduleMatchLines() {
+  if (matchLineFrame) return;
+
+  matchLineFrame = window.requestAnimationFrame(() => {
+    matchLineFrame = null;
+    renderMatchLines();
+  });
+}
+
+function matchAnchorCenter(anchor, boardRect) {
+  const rect = anchor.getBoundingClientRect();
+
+  return {
+    x: rect.left + rect.width / 2 - boardRect.left,
+    y: rect.top + rect.height / 2 - boardRect.top,
+  };
+}
+
+function drawMatchLine(from, to, className) {
+  if (!els.matchOverlay) return;
+
+  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+  line.setAttribute('x1', from.x.toFixed(2));
+  line.setAttribute('y1', from.y.toFixed(2));
+  line.setAttribute('x2', to.x.toFixed(2));
+  line.setAttribute('y2', to.y.toFixed(2));
+  line.setAttribute('class', className);
+  els.matchOverlay.appendChild(line);
+}
+
+function renderMatchLines() {
+  if (!els.matchOverlay || !els.matchBoard) return;
+
+  els.matchOverlay.innerHTML = '';
+
+  const batch = currentMatchBatch();
+  if (!batch.length) return;
+
+  const boardRect = els.matchBoard.getBoundingClientRect();
+  if (boardRect.width < 1 || boardRect.height < 1) return;
+
+  matchState.links.forEach((answerId, questionId) => {
+    if (!batch.some((pair) => pair.id === questionId)) return;
+
+    const questionAnchor = els.matchBoard.querySelector(
+      `.match-anchor[data-anchor-question="${questionId}"]`,
+    );
+    const answerAnchor = els.matchBoard.querySelector(
+      `.match-anchor[data-anchor-answer="${answerId}"]`,
+    );
+    if (!questionAnchor || !answerAnchor) return;
+
+    const classes = ['match-line'];
+    if (matchState.checked) {
+      classes.push(isMatchCorrect(questionId, answerId) ? 'is-correct' : 'is-wrong');
+    }
+
+    drawMatchLine(
+      matchAnchorCenter(questionAnchor, boardRect),
+      matchAnchorCenter(answerAnchor, boardRect),
+      classes.join(' '),
+    );
+  });
+
+  const drag = matchState.drag;
+  if (drag && drag.moved) {
+    const questionAnchor = els.matchBoard.querySelector(
+      `.match-anchor[data-anchor-question="${drag.questionId}"]`,
+    );
+    if (questionAnchor) {
+      drawMatchLine(
+        matchAnchorCenter(questionAnchor, boardRect),
+        {
+          x: drag.lastX - boardRect.left,
+          y: drag.lastY - boardRect.top,
+        },
+        'match-line is-temp',
+      );
+    }
+  }
+}
+
+function connectMatch(questionId, answerId) {
+  if (!questionId || !answerId || matchState.checked) return;
+
+  const batch = currentMatchBatch();
+  const validQuestion = batch.some((pair) => pair.id === questionId);
+  const validAnswer = batch.some((pair) => pair.id === answerId);
+  if (!validQuestion || !validAnswer) return;
+
+  matchState.links.forEach((linkedAnswerId, linkedQuestionId) => {
+    if (linkedAnswerId === answerId) matchState.links.delete(linkedQuestionId);
+  });
+
+  matchState.links.set(questionId, answerId);
+  matchState.pendingQuestion = null;
+}
+
+function unlinkMatchQuestion(questionId) {
+  matchState.links.delete(questionId);
+}
+
+function startMatchDrag(anchor, event) {
+  if (matchState.checked || matchState.summary) return;
+
+  const questionId = anchor.dataset.anchorQuestion;
+  if (!questionId) return;
+
+  event.preventDefault();
+  finishMatchDrag();
+  unlinkMatchQuestion(questionId);
+  matchState.pendingQuestion = questionId;
+  matchState.drag = {
+    pointerId: event.pointerId,
+    questionId,
+    anchor,
+    startX: event.clientX,
+    startY: event.clientY,
+    lastX: event.clientX,
+    lastY: event.clientY,
+    moved: false,
+  };
+
+  try {
+    anchor.setPointerCapture(event.pointerId);
+  } catch (error) {
+    // Pointer capture tidak wajib; event tetap dipantau lewat window.
+  }
+
+  els.matchBoard.classList.add('is-dragging');
+  syncMatchUi();
+}
+
+function finishMatchDrag() {
+  const drag = matchState.drag;
+
+  if (drag) {
+    try {
+      if (drag.anchor.hasPointerCapture && drag.anchor.hasPointerCapture(drag.pointerId)) {
+        drag.anchor.releasePointerCapture(drag.pointerId);
+      }
+    } catch (error) {
+      // Abaikan bila pointer capture sudah dilepas browser.
+    }
+  }
+
+  matchState.drag = null;
+  if (els.matchBoard) els.matchBoard.classList.remove('is-dragging');
+}
+
+function cancelMatchDrag() {
+  finishMatchDrag();
+  matchState.pendingQuestion = null;
+  scheduleMatchLines();
+}
+
+function handleMatchPointerDown(event) {
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  if (matchState.checked || matchState.summary) return;
+
+  const questionAnchor = target.closest('.match-anchor--question');
+  if (questionAnchor) {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    startMatchDrag(questionAnchor, event);
+    return;
+  }
+
+  const answerAnchor = target.closest('.match-anchor--answer');
+  if (answerAnchor && matchState.pendingQuestion) {
+    event.preventDefault();
+    const questionId = matchState.pendingQuestion;
+    matchState.pendingQuestion = null;
+    connectMatch(questionId, answerAnchor.dataset.anchorAnswer);
+    syncMatchUi();
+  }
+}
+
+function handleMatchPointerMove(event) {
+  const drag = matchState.drag;
+  if (!drag || event.pointerId !== drag.pointerId) return;
+
+  drag.lastX = event.clientX;
+  drag.lastY = event.clientY;
+
+  if (!drag.moved) {
+    const distance = Math.hypot(event.clientX - drag.startX, event.clientY - drag.startY);
+    if (distance > 6) drag.moved = true;
+  }
+
+  if (drag.moved && event.cancelable) event.preventDefault();
+  scheduleMatchLines();
+}
+
+function handleMatchPointerUp(event) {
+  const drag = matchState.drag;
+  if (!drag || event.pointerId !== drag.pointerId) return;
+
+  const { questionId, moved } = drag;
+  const hit = document.elementFromPoint(event.clientX, event.clientY);
+  const answerAnchor = hit instanceof Element ? hit.closest('.match-anchor--answer') : null;
+
+  if (answerAnchor && els.matchBoard.contains(answerAnchor)) {
+    matchState.pendingQuestion = null;
+    connectMatch(questionId, answerAnchor.dataset.anchorAnswer);
+  } else if (moved) {
+    matchState.pendingQuestion = null;
+  }
+
+  finishMatchDrag();
+  syncMatchUi();
+}
+
+function handleMatchPointerCancel(event) {
+  const drag = matchState.drag;
+  if (!drag || event.pointerId !== drag.pointerId) return;
+
+  matchState.pendingQuestion = null;
+  finishMatchDrag();
+  syncMatchUi();
+}
+
+function handleMatchClick(event) {
+  if (event.detail !== 0) return;
+
+  const target = event.target;
+  if (!(target instanceof Element)) return;
+  if (matchState.checked || matchState.summary) return;
+
+  const questionAnchor = target.closest('.match-anchor--question');
+  if (questionAnchor) {
+    const questionId = questionAnchor.dataset.anchorQuestion;
+
+    if (matchState.pendingQuestion === questionId) {
+      matchState.pendingQuestion = null;
+      syncMatchUi();
+      return;
+    }
+
+    unlinkMatchQuestion(questionId);
+    matchState.pendingQuestion = questionId;
+    syncMatchUi();
+    return;
+  }
+
+  const answerAnchor = target.closest('.match-anchor--answer');
+  if (answerAnchor && matchState.pendingQuestion) {
+    const questionId = matchState.pendingQuestion;
+    matchState.pendingQuestion = null;
+    connectMatch(questionId, answerAnchor.dataset.anchorAnswer);
+    syncMatchUi();
+  }
+}
+
+function clearMatchLinks() {
+  if (!currentMatchBatch().length) return;
+
+  cancelMatchDrag();
+  matchState.links.clear();
+  matchState.checked = false;
+  matchState.batchScores.delete(matchState.batchIndex);
+  syncMatchUi();
+}
+
+function checkMatchAnswers() {
+  const batch = currentMatchBatch();
+  if (!batch.length || matchState.checked) return;
+  if (!batch.every((pair) => matchState.links.has(pair.id))) return;
+
+  matchState.checked = true;
+  cancelMatchDrag();
+
+  const correct = batch.reduce(
+    (sum, pair) => (isMatchCorrect(pair.id, matchState.links.get(pair.id)) ? sum + 1 : sum),
+    0,
+  );
+  matchState.batchScores.set(matchState.batchIndex, correct);
+  syncMatchUi();
+}
+
+function nextMatchBatch() {
+  if (!matchState.checked) return;
+
+  if (matchState.batchIndex >= matchState.batches.length - 1) {
+    matchState.summary = true;
+    cancelMatchDrag();
+    renderMatch();
+    return;
+  }
+
+  matchState.batchIndex += 1;
+  matchState.checked = false;
+  matchState.links = new Map();
+  matchState.pendingQuestion = null;
+  matchState.answerOrder = createMatchAnswerOrder(currentMatchBatch());
+  cancelMatchDrag();
+  renderMatch();
+}
+
+function initMatchEvents() {
+  if (!els.matchBoard) return;
+
+  els.matchBoard.addEventListener('pointerdown', handleMatchPointerDown);
+  els.matchBoard.addEventListener('click', handleMatchClick);
+  window.addEventListener('pointermove', handleMatchPointerMove, { passive: false });
+  window.addEventListener('pointerup', handleMatchPointerUp);
+  window.addEventListener('pointercancel', handleMatchPointerCancel);
+  window.addEventListener('resize', scheduleMatchLines);
+
+  els.matchCheck.addEventListener('click', checkMatchAnswers);
+  els.matchNext.addEventListener('click', nextMatchBatch);
+  els.matchReset.addEventListener('click', clearMatchLinks);
+  els.matchRestart.addEventListener('click', resetMatchSession);
+
+  // Gambar yang selesai dimuat bisa mengubah tinggi kartu.
+  els.matchBoard.addEventListener('load', scheduleMatchLines, true);
+
+  if (typeof ResizeObserver === 'function') {
+    const observer = new ResizeObserver(scheduleMatchLines);
+    observer.observe(els.matchBoard);
+  }
 }
 
 /* ============================================================
@@ -5490,9 +6288,11 @@ state.structuredRows = createEmptyStructuredRows();
 renderStructuredRows();
 setInputMode('paste', { persist: false });
 updateCounters();
+initMatchEvents();
 renderWorkspace();
 buildThemeOptions();
 applyTheme(currentTheme, { persist: false });
 applyLanguage(lang, { persist: false });
 restoreSavedInput();
 restoreFeynmanState();
+if (document.fonts?.ready) document.fonts.ready.then(scheduleMatchLines);
