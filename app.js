@@ -144,6 +144,7 @@ const SAMPLE_STRUCTURED_EN = [
 
 const STORAGE_KEY = 'ai-study-buddy.lang';
 const NOTES_KEY = 'ai-study-buddy.notes';
+const FEYNMAN_KEY = 'ai-study-buddy.feynman';
 const THEME_KEY = 'ai-study-buddy.theme';
 const DEFAULT_THEME = 'blue';
 
@@ -167,6 +168,9 @@ const THEMES = [
 const MAX_IMPORT_BYTES = 12 * 1024 * 1024;
 const STORAGE_VERSION = 5;
 const EXPORT_VERSION = 9;
+const FEYNMAN_VERSION = 1;
+const FEYNMAN_HISTORY_LIMIT = 30;
+const FEYNMAN_MIN_CHARS = 20;
 const MAX_STRUCTURED_ROWS = 100;
 const MIN_STRUCTURED_ROWS = 2;
 
@@ -243,6 +247,11 @@ const TRANSLATIONS = {
     'structured.imageRemoveAria': 'Hapus foto dari {field} soal {n}',
     'structured.imageFieldTerm': 'istilah',
     'structured.imageFieldExplanation': 'penjelasan',
+    'structured.formatGroup': 'Format teks',
+    'structured.formatBold': 'Tebal',
+    'structured.formatItalic': 'Miring',
+    'structured.formatSup': 'Pangkat, contoh x^2',
+    'structured.formatSub': 'Indeks, contoh H_2O',
     'structured.imageProcessing': 'Memproses…',
     'structured.imageErrorType': 'File harus berupa gambar (JPG, PNG, atau WebP).',
     'structured.imageErrorSize': 'Gambar terlalu besar. Maksimal 12 MB.',
@@ -264,6 +273,7 @@ const TRANSLATIONS = {
     'structured.tips.three': 'Istilah boleh sama asalkan foto atau jawabannya berbeda; hanya soal yang benar-benar kembar yang ditolak.',
     'structured.tips.four': 'Setiap kotak bisa berisi teks, foto, atau keduanya. Foto dikompres otomatis.',
     'structured.tips.five': 'Data formulir dan fotonya tersimpan otomatis di browser ini.',
+    'structured.tips.six': 'Tulis **tebal**, *miring*, x^2, atau H_2O — atau pakai tombol format di tiap kotak.',
 
     'storage.clear': 'Hapus semua',
     'storage.clearConfirm': 'Yakin? Klik lagi',
@@ -284,12 +294,80 @@ const TRANSLATIONS = {
     'empty.f1': '<strong class="font-semibold text-slate-700">Flashcard 3D.</strong> Klik kartu untuk membalik.',
     'empty.f2': '<strong class="font-semibold text-slate-700">Kuis pilihan ganda.</strong> Lengkap dengan pembahasan.',
     'empty.f3': '<strong class="font-semibold text-slate-700">Skor otomatis.</strong> Pantau hasil belajarmu.',
+    'empty.f4': '<strong class="font-semibold text-slate-700">Metode Feynman.</strong> Jelaskan konsep dengan bahasamu sendiri.',
 
     'tabs.cards': 'Flashcard',
     'tabs.quiz': 'Kuis',
     'tabs.tf': 'True / False',
+    'tabs.feynman': 'Feynman',
     'tabs.aria': 'Mode belajar',
     'action.new': 'Catatan baru',
+
+    'feynman.label': 'Metode Feynman',
+    'feynman.title': 'Ajari orang lain, bukan menghafal',
+    'feynman.desc': 'Pilih satu konsep, jelaskan dengan bahasamu sendiri, lalu bandingkan dengan catatan asli untuk menemukan celah pemahaman.',
+    'feynman.stepsAria': 'Langkah metode Feynman',
+    'feynman.step1Short': 'Pilih konsep',
+    'feynman.step2Short': 'Jelaskan',
+    'feynman.step3Short': 'Review',
+    'feynman.step1Title': '1. Pilih atau tulis konsep',
+    'feynman.step1Desc': 'Gunakan konsep dari flashcard yang sudah kamu buat, atau tulis konsep baru yang ingin kamu uji.',
+    'feynman.sourceAria': 'Sumber konsep',
+    'feynman.sourceCard': 'Dari flashcard',
+    'feynman.sourceManual': 'Tulis manual',
+    'feynman.cardLabel': 'Pilih konsep',
+    'feynman.cardEmpty': 'Belum ada flashcard. Tulis konsep secara manual.',
+    'feynman.manualLabel': 'Judul konsep',
+    'feynman.manualPlaceholder': 'Contoh: Hukum Newton II',
+    'feynman.referenceLabel': 'Catatan asli / kunci jawaban (opsional)',
+    'feynman.referencePlaceholder': 'Tempel jawaban dari catatanmu di sini agar bisa dibandingkan.',
+    'feynman.referenceHint': 'Kalau dikosongkan, langkah review tetap bisa dilakukan tanpa pembanding.',
+    'feynman.nextExplain': 'Lanjut: jelaskan',
+    'feynman.back': 'Kembali',
+    'feynman.nextReview': 'Lanjut: review',
+    'feynman.step2Title': '2. Jelaskan dengan bahasa sederhana',
+    'feynman.step2Desc': 'Jelaskan konsep ini dengan bahasa sederhana seolah-olah kamu sedang mengajar orang lain.',
+    'feynman.conceptBadge': 'Konsep: {concept}',
+    'feynman.explanationLabel': 'Penjelasanmu',
+    'feynman.explanationPlaceholder': 'Mulai dari ide besarnya, lalu jelaskan dengan kata-katamu sendiri...',
+    'feynman.richHint': 'Boleh pakai **tebal**, *miring*, x^2, atau H_2O.',
+    'feynman.charCount': '{n} karakter',
+    'feynman.wordCount': '{n} kata',
+    'feynman.step3Title': '3. Review & temukan celah',
+    'feynman.step3Desc': 'Bandingkan penjelasanmu dengan catatan asli, lalu tandai hal yang masih perlu diperbaiki.',
+    'feynman.yourExplanation': 'Penjelasanmu',
+    'feynman.originalNotes': 'Catatan asli',
+    'feynman.noExplanation': 'Penjelasan masih kosong.',
+    'feynman.noReference': 'Belum ada catatan asli untuk konsep ini. Tambahkan lewat “Tulis manual” bila ingin pembanding.',
+    'feynman.gapTitle': 'Analisis celah otomatis',
+    'feynman.gapAllGood': 'Semua kata kunci utama dari catatan asli sudah muncul di penjelasanmu.',
+    'feynman.gapFound': '{n} kata kunci dari catatan asli belum muncul. Coba jelaskan juga:',
+    'feynman.gapNoReference': 'Tambahkan catatan asli (opsional) di langkah 1 untuk melihat analisis celah.',
+    'feynman.gapShort': 'Penjelasanmu masih pendek. Tambahkan ide utama dan contoh agar lebih jelas.',
+    'feynman.gapKeywordAria': 'Kata kunci yang belum muncul: {word}',
+    'feynman.checklistTitle': 'Evaluasi mandiri',
+    'feynman.checkSimple': 'Penjelasannya sudah sederhana dan mudah dipahami.',
+    'feynman.checkJargon': 'Tidak ada istilah rumit yang belum dijelaskan.',
+    'feynman.checkExample': 'Ada contoh atau analogi yang membantu.',
+    'feynman.checkComplete': 'Ide utamanya sudah tercakup semua.',
+    'feynman.editExplanation': 'Ubah penjelasan',
+    'feynman.newConcept': 'Konsep baru',
+    'feynman.save': 'Simpan latihan',
+    'feynman.savedNotice': 'Latihan tersimpan di riwayat.',
+    'feynman.historyTitle': 'Riwayat latihan',
+    'feynman.historyEmpty': 'Belum ada latihan tersimpan. Simpan hasil review untuk melihat riwayat di sini.',
+    'feynman.historyScore': '{n}/4 checklist',
+    'feynman.historyLoad': 'Muat',
+    'feynman.historyDelete': 'Hapus',
+    'feynman.historyLoadAria': 'Muat latihan {concept}',
+    'feynman.historyDeleteAria': 'Hapus riwayat {concept}',
+    'feynman.untitled': 'Konsep tanpa judul',
+    'feynman.hintChooseConcept': 'Pilih konsep dulu sebelum lanjut.',
+    'feynman.hintManualConcept': 'Tulis judul konsep minimal 2 karakter.',
+    'feynman.hintEmptyExplanation': 'Tulis penjelasan minimal 20 karakter agar bisa direview.',
+    'feynman.hintNoCards': 'Belum ada flashcard. Pilih “Tulis manual” untuk memulai.',
+    'feynman.hintSaveQuota': 'Riwayat tidak bisa disimpan karena penyimpanan browser penuh.',
+    'feynman.restoredDraft': 'Draf latihan terakhir dimuat kembali.',
 
     'card.counter': 'Kartu {i} / {n}',
     'card.clickToFlip': 'Klik kartu untuk membalik',
@@ -433,6 +511,11 @@ const TRANSLATIONS = {
     'structured.imageRemoveAria': 'Remove the photo from the {field} of question {n}',
     'structured.imageFieldTerm': 'term',
     'structured.imageFieldExplanation': 'explanation',
+    'structured.formatGroup': 'Text formatting',
+    'structured.formatBold': 'Bold',
+    'structured.formatItalic': 'Italic',
+    'structured.formatSup': 'Superscript, e.g. x^2',
+    'structured.formatSub': 'Subscript, e.g. H_2O',
     'structured.imageProcessing': 'Processing…',
     'structured.imageErrorType': 'The file must be an image (JPG, PNG, or WebP).',
     'structured.imageErrorSize': 'The image is too large. The maximum is 12 MB.',
@@ -454,6 +537,7 @@ const TRANSLATIONS = {
     'structured.tips.three': 'The same term is allowed when the photo or answer differs; only identical questions are rejected.',
     'structured.tips.four': 'Each field can hold text, a photo, or both. Photos are compressed automatically.',
     'structured.tips.five': 'Form data and photos are saved automatically in this browser.',
+    'structured.tips.six': 'Write **bold**, *italic*, x^2, or H_2O — or use the format buttons in each field.',
 
     'storage.clear': 'Clear all',
     'storage.clearConfirm': 'Sure? Click again',
@@ -474,12 +558,80 @@ const TRANSLATIONS = {
     'empty.f1': '<strong class="font-semibold text-slate-700">3D flashcards.</strong> Click a card to flip it.',
     'empty.f2': '<strong class="font-semibold text-slate-700">Multiple-choice quiz.</strong> Complete with explanations.',
     'empty.f3': '<strong class="font-semibold text-slate-700">Automatic scoring.</strong> See how well you did.',
+    'empty.f4': '<strong class="font-semibold text-slate-700">Feynman technique.</strong> Explain concepts in your own words.',
 
     'tabs.cards': 'Flashcards',
     'tabs.quiz': 'Quiz',
     'tabs.tf': 'True / False',
+    'tabs.feynman': 'Feynman',
     'tabs.aria': 'Study mode',
     'action.new': 'New notes',
+
+    'feynman.label': 'Feynman technique',
+    'feynman.title': 'Teach someone else, don’t just memorize',
+    'feynman.desc': 'Pick one concept, explain it in your own words, then compare it with the original notes to find the gaps in your understanding.',
+    'feynman.stepsAria': 'Feynman technique steps',
+    'feynman.step1Short': 'Pick a concept',
+    'feynman.step2Short': 'Explain',
+    'feynman.step3Short': 'Review',
+    'feynman.step1Title': '1. Pick or type a concept',
+    'feynman.step1Desc': 'Use a concept from the flashcards you already made, or type a new concept you want to test yourself on.',
+    'feynman.sourceAria': 'Concept source',
+    'feynman.sourceCard': 'From flashcards',
+    'feynman.sourceManual': 'Type manually',
+    'feynman.cardLabel': 'Pick a concept',
+    'feynman.cardEmpty': 'There are no flashcards yet. Type a concept manually.',
+    'feynman.manualLabel': 'Concept title',
+    'feynman.manualPlaceholder': 'Example: Newton’s second law',
+    'feynman.referenceLabel': 'Original notes / answer key (optional)',
+    'feynman.referencePlaceholder': 'Paste the answer from your notes here so it can be compared.',
+    'feynman.referenceHint': 'If you leave this empty, the review step still works without a reference.',
+    'feynman.nextExplain': 'Next: explain',
+    'feynman.back': 'Back',
+    'feynman.nextReview': 'Next: review',
+    'feynman.step2Title': '2. Explain it in simple language',
+    'feynman.step2Desc': 'Explain this concept in simple language as if you were teaching someone else.',
+    'feynman.conceptBadge': 'Concept: {concept}',
+    'feynman.explanationLabel': 'Your explanation',
+    'feynman.explanationPlaceholder': 'Start with the big idea, then explain it in your own words...',
+    'feynman.richHint': 'You can use **bold**, *italic*, x^2, or H_2O.',
+    'feynman.charCount': '{n} characters',
+    'feynman.wordCount': '{n} words',
+    'feynman.step3Title': '3. Review & find the gaps',
+    'feynman.step3Desc': 'Compare your explanation with the original notes, then mark what still needs work.',
+    'feynman.yourExplanation': 'Your explanation',
+    'feynman.originalNotes': 'Original notes',
+    'feynman.noExplanation': 'Your explanation is still empty.',
+    'feynman.noReference': 'There are no original notes for this concept yet. Add them through “Type manually” if you want a reference.',
+    'feynman.gapTitle': 'Automatic gap analysis',
+    'feynman.gapAllGood': 'Every main keyword from the original notes appears in your explanation.',
+    'feynman.gapFound': '{n} keywords from the original notes are missing. Try explaining these too:',
+    'feynman.gapNoReference': 'Add original notes (optional) in step 1 to see a gap analysis.',
+    'feynman.gapShort': 'Your explanation is still short. Add the main idea and an example to make it clearer.',
+    'feynman.gapKeywordAria': 'Missing keyword: {word}',
+    'feynman.checklistTitle': 'Self-assessment',
+    'feynman.checkSimple': 'The explanation is simple and easy to understand.',
+    'feynman.checkJargon': 'There are no complicated terms left unexplained.',
+    'feynman.checkExample': 'There is a helpful example or analogy.',
+    'feynman.checkComplete': 'All the main ideas are covered.',
+    'feynman.editExplanation': 'Edit explanation',
+    'feynman.newConcept': 'New concept',
+    'feynman.save': 'Save practice',
+    'feynman.savedNotice': 'Practice saved to history.',
+    'feynman.historyTitle': 'Practice history',
+    'feynman.historyEmpty': 'No saved practice yet. Save a review to see it in the history here.',
+    'feynman.historyScore': '{n}/4 checklist',
+    'feynman.historyLoad': 'Load',
+    'feynman.historyDelete': 'Delete',
+    'feynman.historyLoadAria': 'Load practice for {concept}',
+    'feynman.historyDeleteAria': 'Delete practice history for {concept}',
+    'feynman.untitled': 'Untitled concept',
+    'feynman.hintChooseConcept': 'Pick a concept before continuing.',
+    'feynman.hintManualConcept': 'Type a concept title of at least 2 characters.',
+    'feynman.hintEmptyExplanation': 'Write at least 20 characters so your explanation can be reviewed.',
+    'feynman.hintNoCards': 'There are no flashcards yet. Choose “Type manually” to start.',
+    'feynman.hintSaveQuota': 'History could not be saved because browser storage is full.',
+    'feynman.restoredDraft': 'Your last practice draft was restored.',
 
     'card.counter': 'Card {i} / {n}',
     'card.clickToFlip': 'Click the card to flip',
@@ -621,6 +773,37 @@ const state = {
 let generateTimer = null;
 let structuredRowSeed = 0;
 
+/* ---------- Status Metode Feynman (v12.0) ---------- */
+const FEYNMAN_CHECK_KEYS = ['simple', 'jargon', 'example', 'complete'];
+
+const feynmanState = {
+  step: 1,
+  source: 'card',
+  cardIndex: 0,
+  concept: '',
+  reference: '',
+  explanation: '',
+  checklist: { simple: false, jargon: false, example: false, complete: false },
+  hint: '',
+  notice: '',
+};
+
+let feynmanHistory = [];
+let feynmanSaveTimer = null;
+
+// Kata umum yang tidak perlu dianggap sebagai celah pemahaman.
+const FEYNMAN_STOPWORDS = new Set([
+  'yang', 'dengan', 'untuk', 'dari', 'pada', 'adalah', 'dalam', 'akan', 'atau',
+  'juga', 'karena', 'sebagai', 'oleh', 'ini', 'itu', 'dan', 'tidak', 'bisa',
+  'dapat', 'agar', 'saat', 'ketika', 'jika', 'kalau', 'lebih', 'sangat', 'sudah',
+  'belum', 'masih', 'hanya', 'antara', 'setiap', 'suatu', 'sebuah', 'para',
+  'kami', 'kita', 'mereka', 'saya', 'kamu', 'anda', 'tersebut', 'secara',
+  'the', 'and', 'that', 'this', 'with', 'from', 'into', 'when', 'then', 'than',
+  'have', 'has', 'had', 'are', 'was', 'were', 'will', 'would', 'can', 'could',
+  'should', 'about', 'their', 'there', 'which', 'while', 'your', 'you', 'for',
+  'not', 'but', 'its', 'they', 'them', 'these', 'those', 'some', 'such',
+]);
+
 const $ = (selector) => document.querySelector(selector);
 
 const els = {
@@ -671,6 +854,39 @@ const els = {
   tabCards: $('#tab-cards'),
   tabQuiz: $('#tab-quiz'),
   tabTf: $('#tab-tf'),
+  tabFeynman: $('#tab-feynman'),
+
+  feynmanSteps: Array.from(document.querySelectorAll('.feynman-step-pill')),
+  feynmanSourceButtons: Array.from(document.querySelectorAll('.feynman-source-btn')),
+  feynmanStep1: $('#feynman-step-1'),
+  feynmanStep2: $('#feynman-step-2'),
+  feynmanStep3: $('#feynman-step-3'),
+  feynmanHint: $('#feynman-hint'),
+  feynmanCardPicker: $('#feynman-card-picker'),
+  feynmanManualPicker: $('#feynman-manual-picker'),
+  feynmanCardSelect: $('#feynman-card-select'),
+  feynmanCardEmpty: $('#feynman-card-empty'),
+  feynmanConceptInput: $('#feynman-concept-input'),
+  feynmanReferenceInput: $('#feynman-reference-input'),
+  feynmanConceptBadge: $('#feynman-concept-badge'),
+  feynmanToolbar: $('#feynman-toolbar'),
+  feynmanExplanation: $('#feynman-explanation'),
+  feynmanCharCount: $('#feynman-char-count'),
+  feynmanUserText: $('#feynman-user-text'),
+  feynmanReferenceText: $('#feynman-reference-text'),
+  feynmanGapText: $('#feynman-gap-text'),
+  feynmanGapChips: $('#feynman-gap-chips'),
+  feynmanChecks: Array.from(document.querySelectorAll('[data-feynman-check]')),
+  feynmanSaveNotice: $('#feynman-save-notice'),
+  feynmanHistoryList: $('#feynman-history-list'),
+  feynmanHistoryEmpty: $('#feynman-history-empty'),
+  feynmanHistoryCount: $('#feynman-history-count'),
+  feynmanNext1: $('#feynman-next-1'),
+  feynmanNext2: $('#feynman-next-2'),
+  feynmanPrev2: $('#feynman-prev-2'),
+  feynmanPrev3: $('#feynman-prev-3'),
+  feynmanSave: $('#feynman-save'),
+  feynmanRestart: $('#feynman-restart'),
 
   cardCounter: $('#card-counter'),
   cardProgress: $('#card-progress'),
@@ -862,9 +1078,68 @@ function dataUrlBytes(dataUrl) {
   return Math.floor((base64.length * 3) / 4);
 }
 
-/** Ubah teks polos menjadi HTML aman, dengan penanda rumpang. */
-function formatText(text) {
-  return escapeHtml(text)
+/* ---------- Rich text ringan (v11.0) ---------- */
+
+// Hanya tag ini yang boleh hidup di dalam teks materi. Semua tag lain
+// di-escape lebih dulu, sehingga tidak ada jalan masuk untuk XSS.
+const RICH_TEXT_TAGS = new Set(['b', 'i', 'strong', 'em', 'sup', 'sub']);
+const RICH_TEXT_TAG_RE = /<(\/?)([a-z][a-z0-9]*)\s*\/?>/gi;
+const RICH_TEXT_TOKEN_RE = /\u0000(\d+)\u0001/g;
+
+/**
+ * Ubah teks materi menjadi HTML aman.
+ *
+ * Urutan kerja sengaja dibuat begini:
+ * 1. Tag yang diizinkan ditukar dengan token unik.
+ * 2. Sisa teks di-escape, jadi `<script>` atau atribut berbahaya mati di sini.
+ * 3. Sintaks ringan diterjemahkan: **tebal**, *miring*, x^2, H_2O.
+ * 4. Token dikembalikan menjadi tag aslinya, lalu penanda rumpang dan baris
+ *    baru diproses.
+ *
+ * Karena escaping terjadi sebelum sintaks diterjemahkan, tidak ada input
+ * pengguna yang bisa menghasilkan tag di luar daftar putih di atas.
+ */
+function formatRichText(value) {
+  const tags = [];
+  const openTags = [];
+  let text = String(value ?? '');
+
+  text = text.replace(RICH_TEXT_TAG_RE, (match, closing, rawName) => {
+    const name = rawName.toLowerCase();
+    if (!RICH_TEXT_TAGS.has(name)) return match;
+
+    if (closing) {
+      // Tag penutup tanpa pasangan dibuang agar tidak merusak format sekitarnya.
+      const last = openTags.lastIndexOf(name);
+      if (last < 0) return '';
+      openTags.splice(last, 1);
+    } else {
+      openTags.push(name);
+    }
+
+    const token = `\u0000${tags.length}\u0001`;
+    tags.push(`<${closing ? '/' : ''}${name}>`);
+    return token;
+  });
+
+  text = escapeHtml(text)
+    // **tebal** lalu *miring* (diproses berurutan agar ** tidak terbaca miring).
+    // Penanda harus menempel pada kata, jadi "5 * 3 * 2" tidak ikut dimiringkan.
+    .replace(/\*\*([^\s*](?:[^*\n]*[^\s*])?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^*])\*([^\s*](?:[^*\n]*[^\s*])?)\*(?!\*)/g, '$1<em>$2</em>')
+    // Pangkat: x^{n+1}, x^2, x^n.
+    .replace(/\^\{([^}\n]+)\}/g, '<sup>$1</sup>')
+    .replace(/\^(\d+(?:[.,]\d+)?)/g, '<sup>$1</sup>')
+    .replace(/\^([A-Za-z])(?![A-Za-z0-9])/g, '<sup>$1</sup>')
+    // Indeks: H_{2}O, H_2O, x_i. Garis bawah di dalam kata (file_name)
+    // dibiarkan apa adanya karena huruf setelahnya masih bagian kata.
+    .replace(/_\{([^}\n]+)\}/g, '<sub>$1</sub>')
+    .replace(/_(\d+)/g, '<sub>$1</sub>')
+    .replace(/_([A-Za-z])(?![A-Za-z0-9])/g, '<sub>$1</sub>');
+
+  text = text.replace(RICH_TEXT_TOKEN_RE, (match, index) => tags[Number(index)] ?? '');
+
+  return text
     .replace(/\[____\]/g, '<span class="blank" aria-label="bagian rumpang"></span>')
     .replace(/\n/g, '<br>');
 }
@@ -1108,6 +1383,70 @@ function structuredImagePreview(row, index, field, disabled) {
     </div>`;
 }
 
+const RICH_FORMAT_TOOLS = [
+  { tag: 'b', glyph: 'B', className: 'is-bold', labelKey: 'structured.formatBold' },
+  { tag: 'i', glyph: 'I', className: 'is-italic', labelKey: 'structured.formatItalic' },
+  { tag: 'sup', glyph: 'x²', className: '', labelKey: 'structured.formatSup' },
+  { tag: 'sub', glyph: 'x₂', className: '', labelKey: 'structured.formatSub' },
+];
+
+/** Toolbar format yang bisa dipakai textarea mana pun lewat id target. */
+function formatToolbarMarkup(targetId, disabled = '') {
+  const buttons = RICH_FORMAT_TOOLS.map((tool) => {
+    const label = t(tool.labelKey);
+    const glyphClass = tool.className ? `format-glyph ${tool.className}` : 'format-glyph';
+
+    return `
+      <button
+        type="button"
+        class="format-btn"
+        data-format="${tool.tag}"
+        data-format-target="${escapeHtml(targetId)}"
+        aria-label="${escapeHtml(label)}"
+        title="${escapeHtml(label)}"${disabled}
+      >
+        <span class="${glyphClass}" aria-hidden="true">${tool.glyph}</span>
+      </button>`;
+  }).join('');
+
+  return `
+    <div class="structured-toolbar" role="group" aria-label="${escapeHtml(t('structured.formatGroup'))}">
+      ${buttons}
+    </div>`;
+}
+
+/** Bungkus pilihan pada textarea dengan tag format, atau lepaskan jika sudah dibungkus. */
+function applyRichFormat(button) {
+  const targetId = button.dataset.formatTarget;
+  const textarea = targetId ? document.getElementById(targetId) : null;
+  if (!textarea || textarea.disabled) return;
+
+  const tag = button.dataset.format;
+  if (!RICH_FORMAT_TOOLS.some((tool) => tool.tag === tag)) return;
+
+  const open = `<${tag}>`;
+  const close = `</${tag}>`;
+  const value = textarea.value;
+  const start = Number.isInteger(textarea.selectionStart) ? textarea.selectionStart : value.length;
+  const end = Number.isInteger(textarea.selectionEnd) ? textarea.selectionEnd : start;
+  const selected = value.slice(start, end);
+  const before = value.slice(Math.max(0, start - open.length), start);
+  const after = value.slice(end, end + close.length);
+
+  // Tekan tombol yang sama dua kali: lepaskan tag di sekitar pilihan.
+  if (before.toLowerCase() === open && after.toLowerCase() === close) {
+    textarea.setRangeText(selected, start - open.length, end + close.length, 'select');
+  } else {
+    textarea.setRangeText(`${open}${selected}${close}`, start, end, 'select');
+    const innerStart = start + open.length;
+    textarea.setSelectionRange(innerStart, innerStart + selected.length);
+  }
+
+  textarea.focus({ preventScroll: true });
+  // Biarkan handler input yang sudah ada memperbarui state, counter, dan auto-save.
+  textarea.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
 function structuredFieldMarkup(row, index, field, disabled) {
   const isTerm = field === 'term';
   const inputId = `structured-${isTerm ? 'term' : 'explanation'}-${row.id}`;
@@ -1130,6 +1469,7 @@ function structuredFieldMarkup(row, index, field, disabled) {
         <label class="structured-label" for="${inputId}">${escapeHtml(label)}</label>
         ${structuredImageButton(row, index, field, disabled)}
       </div>
+      ${formatToolbarMarkup(inputId, disabled)}
       <textarea
         id="${inputId}"
         class="structured-input"
@@ -1791,7 +2131,7 @@ function questionPrompt(question) {
 function questionExplanationHtml(question) {
   if (question.type === 'cloze') {
     return `
-      <p>${escapeHtml(t('quiz.explainCloze', { term: question.term }))}</p>
+      <p class="rich-text">${formatRichText(t('quiz.explainCloze', { term: question.term }))}</p>
       ${imageMarkup(question.termImage, {
         alt: t('image.alt'),
         className: 'study-image feedback-image',
@@ -1804,7 +2144,7 @@ function questionExplanationHtml(question) {
   const definition = String(question.definition ?? '').trim();
 
   return `
-    <p>${escapeHtml(termLabel)}${definition ? `: ${escapeHtml(definition)}` : ''}</p>
+    <p class="rich-text">${formatRichText(`${termLabel}${definition ? `: ${definition}` : ''}`)}</p>
     ${imageMarkup(question.definitionImage, {
       alt: t('image.alt'),
       className: 'study-image feedback-image',
@@ -2114,21 +2454,21 @@ function renderCard(options = {}) {
     ? 'card-content card-content--question'
     : 'card-content card-content--cloze';
   els.cardFront.innerHTML = `
-    ${frontText ? `<div class="card-text">${formatText(frontText)}</div>` : ''}
+    ${frontText ? `<div class="card-text rich-text">${formatRichText(frontText)}</div>` : ''}
     ${imageMarkup(frontImage, { alt: t('image.alt'), className: 'study-image card-image' })}`;
 
   els.cardBack.className = 'card-content card-content--answer';
   if (card.kind === 'definition') {
     els.cardBack.innerHTML = `
-      ${card.definition ? `<div class="card-text">${formatText(card.definition)}</div>` : ''}
+      ${card.definition ? `<div class="card-text rich-text">${formatRichText(card.definition)}</div>` : ''}
       ${imageMarkup(card.definitionImage, {
         alt: t('image.alt'),
         className: 'study-image card-image',
       })}`;
   } else {
     els.cardBack.innerHTML = `
-      <span class="text-xl font-extrabold">${escapeHtml(card.term)}</span>
-      <span class="mt-2 block text-sm leading-relaxed text-white/80">${escapeHtml(card.definition)}</span>
+      <span class="text-xl font-extrabold rich-text">${formatRichText(card.term)}</span>
+      <span class="mt-2 block text-sm leading-relaxed text-white/80 rich-text">${formatRichText(card.definition)}</span>
     `;
   }
 
@@ -2200,14 +2540,14 @@ function renderQuizQuestion() {
   els.quizProgress.style.width = `${((state.quizIndex + (answered ? 1 : 0)) / state.quiz.length) * 100}%`;
 
   els.quizPrompt.innerHTML = `
-    <span>${escapeHtml(questionPrompt(question))}</span>
+    <span class="rich-text">${formatRichText(questionPrompt(question))}</span>
     ${imageMarkup(question.termImage, {
       alt: t('image.alt'),
       className: 'study-image quiz-image',
     })}`;
 
   if (question.context) {
-    els.quizContext.innerHTML = formatText(question.context);
+    els.quizContext.innerHTML = formatRichText(question.context);
     els.quizContext.classList.remove('hidden');
   } else {
     els.quizContext.innerHTML = '';
@@ -2220,7 +2560,7 @@ function renderQuizQuestion() {
         <button type="button" class="quiz-option" data-index="${index}">
           <span class="option-key">${'ABCD'[index] || index + 1}</span>
           <span class="option-body flex-1">
-            ${option.text ? `<span class="option-text">${escapeHtml(option.text)}</span>` : ''}
+            ${option.text ? `<span class="option-text rich-text">${formatRichText(option.text)}</span>` : ''}
             ${imageMarkup(option.image, {
               alt: t('image.alt'),
               className: 'study-image option-image',
@@ -2349,14 +2689,14 @@ function showQuizResult({ celebrate = true } = {}) {
           .map(
             (question) => `
           <li class="rounded-xl bg-rose-50/80 px-3.5 py-2.5 text-xs leading-relaxed text-rose-700 ring-1 ring-rose-100">
-            <span class="font-extrabold">${escapeHtml(
+            <span class="font-extrabold rich-text">${formatRichText(
               String(question.term ?? '').trim() || t('image.termLabel'),
             )}</span>
             ${imageMarkup(question.termImage, {
               alt: t('image.alt'),
               className: 'study-image review-image',
             })}
-            <span class="mt-1 block text-rose-600/90">${escapeHtml(question.note || '')}</span>
+            <span class="mt-1 block text-rose-600/90 rich-text">${formatRichText(question.note || '')}</span>
             ${imageMarkup(question.noteImage, {
               alt: t('image.alt'),
               className: 'study-image review-image',
@@ -2425,13 +2765,13 @@ function renderTfQuestion() {
   els.tfProgress.style.width = `${((state.tfIndex + (answered ? 1 : 0)) / state.tf.length) * 100}%`;
 
   els.tfTerm.innerHTML = `
-    ${question.term ? escapeHtml(question.term) : ''}
+    ${question.term ? `<span class="rich-text">${formatRichText(question.term)}</span>` : ''}
     ${imageMarkup(question.termImage, {
       alt: t('image.alt'),
       className: 'study-image tf-image',
     })}`;
   els.tfDefinition.innerHTML = `
-    ${question.definition ? escapeHtml(question.definition) : ''}
+    ${question.definition ? `<span class="rich-text">${formatRichText(question.definition)}</span>` : ''}
     ${imageMarkup(question.definitionImage, {
       alt: t('image.alt'),
       className: 'study-image tf-image',
@@ -2509,7 +2849,7 @@ function paintTfAnswer(question) {
   els.tfFeedback.innerHTML = `
     <p class="font-extrabold">${feedbackTitle}</p>
     ${question.timedOut ? `<p class="mt-1 font-semibold">${t('timer.timeUpNote')}</p>` : ''}
-    <p class="mt-1">${escapeHtml(
+    <p class="mt-1 rich-text">${formatRichText(
       question.isTrue
         ? t('tf.explainTrue', { term: termLabel })
         : t('tf.explainFalse', { term: termLabel, correctTerm: ownerLabel }),
@@ -3121,6 +3461,7 @@ function switchTab(tabName) {
   els.tabCards.classList.toggle('hidden', tabName !== 'cards');
   els.tabQuiz.classList.toggle('hidden', tabName !== 'quiz');
   els.tabTf.classList.toggle('hidden', tabName !== 'tf');
+  els.tabFeynman.classList.toggle('hidden', tabName !== 'feynman');
 
   if (tabName !== 'quiz') resetTimer(quizTimer);
   if (tabName !== 'tf') resetTimer(tfTimer);
@@ -3128,6 +3469,7 @@ function switchTab(tabName) {
   closeAllTimerMenus();
   if (tabName === 'quiz') syncTimerAvailability(quizTimer);
   if (tabName === 'tf') syncTimerAvailability(tfTimer);
+  if (tabName === 'feynman') renderFeynman();
 }
 
 function renderWorkspace() {
@@ -3391,6 +3733,7 @@ function applyLanguage(nextLang, options = {}) {
   renderStructuredRows();
   updateCounters();
   updateStats();
+  renderFeynman();
   setLoading(state.loading);
 
   if (state.cards.length > 0) {
@@ -3463,7 +3806,7 @@ function setLoading(loading) {
   });
 
   els.structuredRows.querySelectorAll(
-    '.structured-input, .row-remove, .image-btn, .image-remove, .structured-image-input',
+    '.structured-input, .row-remove, .image-btn, .image-remove, .structured-image-input, .format-btn',
   ).forEach((field) => {
     field.disabled = loading;
   });
@@ -3593,7 +3936,7 @@ function clearSavedNotes() {
 }
 
 /** Pasang kartu yang sudah divalidasi lalu segarkan seluruh area belajar. */
-function applyCards(cards) {
+function applyCards(cards, options = {}) {
   state.cards = cards;
   state.quiz = buildQuiz(cards);
   state.tf = buildTrueFalseQuestions(cards);
@@ -3607,7 +3950,14 @@ function applyCards(cards) {
   state.tfStreak = 0;
   state.tfAnswered = false;
 
+  if (options.resetFeynman) {
+    resetFeynmanDraft({ persist: false, render: false });
+  }
+
   renderWorkspace();
+  feynmanState.cardIndex = feynmanCardIndex();
+  if (options.resetFeynman) persistFeynman();
+  renderFeynman();
 }
 
 /** Muat kembali kedua mode input lalu susun materi dari mode yang aktif. */
@@ -3636,6 +3986,566 @@ function restoreSavedInput() {
   if (cards.length < 2) return;
 
   applyCards(cards);
+}
+
+/* ============================================================
+   Metode Feynman (v12.0)
+   ============================================================ */
+
+function feynmanCardIndex(value = feynmanState.cardIndex) {
+  const max = state.cards.length - 1;
+  if (max < 0) return 0;
+
+  const index = Number(value);
+  if (!Number.isInteger(index)) return 0;
+  return Math.min(Math.max(index, 0), max);
+}
+
+/** Ambil judul konsep dan kunci jawaban dari sebuah kartu. */
+function feynmanCardInfo(card) {
+  if (!card) return { concept: '', reference: '' };
+
+  const reference = String(card.definition ?? card.source ?? '').trim();
+  const concept = String(card.term ?? '').trim()
+    || richTextToText(reference).slice(0, 80)
+    || t('feynman.untitled');
+
+  return { concept, reference };
+}
+
+/** Ubah teks ber-markup menjadi teks polos untuk analisis celah. */
+function richTextToText(value) {
+  return String(value ?? '')
+    .replace(/<br\s*\/?>/gi, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/[*_]{1,3}/g, '')
+    .replace(/[^\p{L}\p{N}\s-]+/gu, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function normalizeFeynmanChecklist(value) {
+  const source = value && typeof value === 'object' ? value : {};
+
+  return FEYNMAN_CHECK_KEYS.reduce((result, key) => {
+    result[key] = Boolean(source[key]);
+    return result;
+  }, {});
+}
+
+function normalizeFeynmanEntry(entry) {
+  if (!entry || typeof entry !== 'object') return null;
+
+  const concept = String(entry.concept ?? '').trim();
+  const explanation = String(entry.explanation ?? '');
+  if (!concept || !explanation.trim()) return null;
+
+  const created = new Date(entry.createdAt);
+
+  return {
+    id: String(entry.id ?? `fx-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`),
+    concept: concept.slice(0, 200),
+    explanation,
+    reference: String(entry.reference ?? ''),
+    source: entry.source === 'manual' ? 'manual' : 'card',
+    missing: Array.isArray(entry.missing)
+      ? entry.missing.slice(0, 8).map((word) => String(word))
+      : [],
+    checklist: normalizeFeynmanChecklist(entry.checklist),
+    createdAt: Number.isNaN(created.getTime())
+      ? new Date().toISOString()
+      : created.toISOString(),
+  };
+}
+
+function readFeynmanStore() {
+  try {
+    const raw = window.localStorage.getItem(FEYNMAN_KEY);
+    if (!raw) return null;
+
+    const data = JSON.parse(raw);
+    return data && typeof data === 'object' && !Array.isArray(data) ? data : null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function feynmanDraftPayload() {
+  return {
+    step: feynmanState.step,
+    source: feynmanState.source,
+    cardIndex: feynmanState.cardIndex,
+    concept: feynmanState.concept,
+    reference: feynmanState.reference,
+    explanation: feynmanState.explanation,
+    checklist: { ...feynmanState.checklist },
+    updatedAt: new Date().toISOString(),
+  };
+}
+
+/** Tulis draf + riwayat ke kunci terpisah agar data v11.0 tetap utuh. */
+function persistFeynman() {
+  try {
+    window.localStorage.setItem(
+      FEYNMAN_KEY,
+      JSON.stringify({
+        version: FEYNMAN_VERSION,
+        draft: feynmanDraftPayload(),
+        history: feynmanHistory,
+      }),
+    );
+    return true;
+  } catch (error) {
+    if (!saveQuotaWarned && isQuotaError(error)) {
+      saveQuotaWarned = true;
+      showHint(t('feynman.hintSaveQuota'));
+    }
+    return false;
+  }
+}
+
+function queueFeynmanSave() {
+  window.clearTimeout(feynmanSaveTimer);
+  feynmanSaveTimer = window.setTimeout(() => {
+    feynmanSaveTimer = null;
+    persistFeynman();
+  }, 400);
+}
+
+function resetFeynmanDraft({ persist = true, render = true } = {}) {
+  feynmanState.step = 1;
+  feynmanState.source = state.cards.length > 0 ? 'card' : 'manual';
+  feynmanState.cardIndex = 0;
+  feynmanState.concept = '';
+  feynmanState.reference = '';
+  feynmanState.explanation = '';
+  feynmanState.checklist = normalizeFeynmanChecklist(null);
+  feynmanState.hint = '';
+  feynmanState.notice = '';
+
+  if (persist) persistFeynman();
+  if (render) renderFeynman();
+}
+
+function clearFeynmanStore() {
+  window.clearTimeout(feynmanSaveTimer);
+  feynmanSaveTimer = null;
+  feynmanHistory = [];
+
+  try {
+    window.localStorage.removeItem(FEYNMAN_KEY);
+  } catch (error) {
+    // Penyimpanan diblokir; state di memori tetap dibersihkan.
+  }
+
+  resetFeynmanDraft({ persist: false });
+}
+
+function restoreFeynmanState() {
+  const data = readFeynmanStore();
+  if (!data) {
+    resetFeynmanDraft({ persist: false });
+    return;
+  }
+
+  if (Array.isArray(data.history)) {
+    feynmanHistory = data.history
+      .map(normalizeFeynmanEntry)
+      .filter(Boolean)
+      .slice(0, FEYNMAN_HISTORY_LIMIT);
+  }
+
+  const draft = data.draft && typeof data.draft === 'object' ? data.draft : null;
+  if (draft) {
+    feynmanState.source = draft.source === 'manual' ? 'manual' : 'card';
+    feynmanState.cardIndex = feynmanCardIndex(draft.cardIndex);
+    feynmanState.concept = String(draft.concept ?? '').slice(0, 200);
+    feynmanState.reference = String(draft.reference ?? '');
+    feynmanState.explanation = String(draft.explanation ?? '');
+    feynmanState.checklist = normalizeFeynmanChecklist(draft.checklist);
+
+    const step = Number(draft.step);
+    feynmanState.step = Number.isInteger(step) ? Math.min(3, Math.max(1, step)) : 1;
+  }
+
+  renderFeynman();
+}
+
+/**
+ * Cari kata kunci penting dari catatan asli yang belum muncul di penjelasan.
+ * Pencocokan memakai awalan lima huruf agar bentuk berimbuhan tetap dianggap
+ * sama, tanpa perlu kamus bahasa.
+ */
+function analyzeFeynmanGaps(explanation, reference) {
+  const plainExplanation = richTextToText(explanation);
+  const userWords = plainExplanation
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}-]+/u)
+    .filter(Boolean);
+  const userSet = new Set(userWords);
+  const userPrefixes = new Set(userWords.map((word) => word.slice(0, 5)));
+
+  const seen = new Set();
+  const missing = [];
+
+  richTextToText(reference)
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}-]+/u)
+    .forEach((word) => {
+      if (word.length < 4 || FEYNMAN_STOPWORDS.has(word) || /^\d+$/.test(word)) return;
+      if (seen.has(word)) return;
+
+      seen.add(word);
+      if (userSet.has(word) || userPrefixes.has(word.slice(0, 5))) return;
+      missing.push(word);
+    });
+
+  const wordCount = plainExplanation.split(/\s+/).filter(Boolean).length;
+
+  return {
+    missing: missing.slice(0, 6),
+    short: wordCount < 20,
+    wordCount,
+  };
+}
+
+function updateFeynmanCounters() {
+  if (!els.feynmanCharCount) return;
+
+  const chars = feynmanState.explanation.length;
+  const words = richTextToText(feynmanState.explanation).split(/\s+/).filter(Boolean).length;
+  els.feynmanCharCount.textContent = `${t('feynman.charCount', { n: chars })} · ${t('feynman.wordCount', { n: words })}`;
+}
+
+function clearFeynmanHint() {
+  feynmanState.hint = '';
+  if (!els.feynmanHint) return;
+
+  els.feynmanHint.textContent = '';
+  els.feynmanHint.classList.add('hidden');
+}
+
+function renderFeynmanCardOptions() {
+  if (!els.feynmanCardSelect) return;
+
+  const hasCards = state.cards.length > 0;
+  els.feynmanCardSelect.disabled = !hasCards;
+  els.feynmanCardSelect.innerHTML = hasCards
+    ? state.cards
+      .map((card, index) => `<option value="${index}">${escapeHtml(feynmanCardInfo(card).concept)}</option>`)
+      .join('')
+    : `<option value="0">${escapeHtml(t('feynman.cardEmpty'))}</option>`;
+
+  els.feynmanCardSelect.value = String(feynmanCardIndex());
+  els.feynmanCardEmpty.classList.toggle('hidden', hasCards);
+}
+
+function renderFeynmanChecklist() {
+  els.feynmanChecks.forEach((input) => {
+    input.checked = Boolean(feynmanState.checklist[input.dataset.feynmanCheck]);
+  });
+}
+
+function renderFeynmanReview() {
+  if (!els.feynmanUserText) return;
+
+  const explanation = feynmanState.explanation.trim();
+  const reference = feynmanState.reference.trim();
+  const analysis = analyzeFeynmanGaps(feynmanState.explanation, feynmanState.reference);
+
+  els.feynmanUserText.innerHTML = explanation
+    ? formatRichText(explanation)
+    : `<span class="feynman-placeholder">${escapeHtml(t('feynman.noExplanation'))}</span>`;
+
+  els.feynmanReferenceText.innerHTML = reference
+    ? formatRichText(reference)
+    : `<span class="feynman-placeholder">${escapeHtml(t('feynman.noReference'))}</span>`;
+
+  if (!reference) {
+    els.feynmanGapText.textContent = t('feynman.gapNoReference');
+    els.feynmanGapChips.innerHTML = '';
+    return;
+  }
+
+  const parts = [];
+  if (analysis.short) parts.push(t('feynman.gapShort'));
+
+  if (analysis.missing.length > 0) {
+    parts.push(t('feynman.gapFound', { n: analysis.missing.length }));
+  } else if (!analysis.short) {
+    parts.push(t('feynman.gapAllGood'));
+  }
+
+  els.feynmanGapText.textContent = parts.join(' ');
+  els.feynmanGapChips.innerHTML = analysis.missing
+    .map((word) => `
+      <span class="feynman-chip" aria-label="${escapeHtml(t('feynman.gapKeywordAria', { word }))}">
+        ${escapeHtml(word)}
+      </span>`)
+    .join('');
+}
+
+function formatFeynmanDate(iso) {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return '';
+
+  try {
+    return new Intl.DateTimeFormat(lang === 'en' ? 'en-US' : 'id-ID', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    }).format(date);
+  } catch (error) {
+    return date.toLocaleString();
+  }
+}
+
+function renderFeynmanHistory() {
+  if (!els.feynmanHistoryList) return;
+
+  els.feynmanHistoryCount.textContent = String(feynmanHistory.length);
+  els.feynmanHistoryEmpty.classList.toggle('hidden', feynmanHistory.length > 0);
+
+  els.feynmanHistoryList.innerHTML = feynmanHistory
+    .map((entry) => {
+      const score = FEYNMAN_CHECK_KEYS.filter((key) => entry.checklist[key]).length;
+      const previewSource = richTextToText(entry.explanation);
+      const preview = previewSource.slice(0, 140);
+      const ellipsis = previewSource.length > 140 ? '…' : '';
+
+      return `
+        <li class="feynman-history-item">
+          <div class="feynman-history-main">
+            <p class="feynman-history-concept">${escapeHtml(entry.concept)}</p>
+            <p class="feynman-history-meta">
+              <span>${escapeHtml(formatFeynmanDate(entry.createdAt))}</span>
+              <span class="feynman-history-score">${escapeHtml(t('feynman.historyScore', { n: score }))}</span>
+            </p>
+            <p class="feynman-history-preview">${escapeHtml(preview)}${ellipsis}</p>
+          </div>
+          <div class="feynman-history-actions">
+            <button
+              type="button"
+              class="feynman-history-btn"
+              data-feynman-load="${escapeHtml(entry.id)}"
+              aria-label="${escapeHtml(t('feynman.historyLoadAria', { concept: entry.concept }))}"
+            >${escapeHtml(t('feynman.historyLoad'))}</button>
+            <button
+              type="button"
+              class="feynman-history-btn is-danger"
+              data-feynman-delete="${escapeHtml(entry.id)}"
+              aria-label="${escapeHtml(t('feynman.historyDeleteAria', { concept: entry.concept }))}"
+            >${escapeHtml(t('feynman.historyDelete'))}</button>
+          </div>
+        </li>`;
+    })
+    .join('');
+}
+
+function renderFeynman() {
+  if (!els.tabFeynman) return;
+
+  feynmanState.cardIndex = feynmanCardIndex();
+  feynmanState.step = Math.min(3, Math.max(1, feynmanState.step));
+
+  els.feynmanSteps.forEach((pill) => {
+    const step = Number(pill.dataset.feynmanStep);
+    pill.classList.toggle('is-active', step === feynmanState.step);
+    pill.classList.toggle('is-done', step < feynmanState.step);
+    pill.setAttribute('aria-current', step === feynmanState.step ? 'step' : 'false');
+  });
+
+  [els.feynmanStep1, els.feynmanStep2, els.feynmanStep3].forEach((panel, index) => {
+    panel.classList.toggle('hidden', feynmanState.step !== index + 1);
+  });
+
+  els.feynmanSourceButtons.forEach((button) => {
+    const active = button.dataset.feynmanSource === feynmanState.source;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+
+  els.feynmanCardPicker.classList.toggle('hidden', feynmanState.source !== 'card');
+  els.feynmanManualPicker.classList.toggle('hidden', feynmanState.source !== 'manual');
+  renderFeynmanCardOptions();
+
+  if (els.feynmanConceptInput.value !== feynmanState.concept) {
+    els.feynmanConceptInput.value = feynmanState.concept;
+  }
+  if (els.feynmanReferenceInput.value !== feynmanState.reference) {
+    els.feynmanReferenceInput.value = feynmanState.reference;
+  }
+  if (els.feynmanExplanation.value !== feynmanState.explanation) {
+    els.feynmanExplanation.value = feynmanState.explanation;
+  }
+
+  els.feynmanToolbar.innerHTML = formatToolbarMarkup('feynman-explanation');
+
+  const concept = feynmanState.concept.trim();
+  els.feynmanConceptBadge.textContent = concept
+    ? t('feynman.conceptBadge', { concept })
+    : t('feynman.hintChooseConcept');
+  els.feynmanConceptBadge.classList.toggle('is-empty', !concept);
+
+  updateFeynmanCounters();
+  renderFeynmanChecklist();
+  renderFeynmanReview();
+  renderFeynmanHistory();
+
+  els.feynmanHint.textContent = feynmanState.hint;
+  els.feynmanHint.classList.toggle('hidden', !feynmanState.hint);
+  els.feynmanSaveNotice.textContent = feynmanState.notice;
+  els.feynmanSaveNotice.classList.toggle('hidden', !feynmanState.notice);
+  els.feynmanSave.disabled = countMeaningfulChars(feynmanState.explanation) < FEYNMAN_MIN_CHARS;
+}
+
+function setFeynmanSource(source) {
+  feynmanState.notice = '';
+  feynmanState.hint = '';
+
+  if (source === 'manual') {
+    feynmanState.source = 'manual';
+  } else if (state.cards.length === 0) {
+    feynmanState.source = 'manual';
+    feynmanState.hint = t('feynman.hintNoCards');
+  } else {
+    feynmanState.source = 'card';
+    const info = feynmanCardInfo(state.cards[feynmanCardIndex()]);
+    feynmanState.concept = info.concept;
+    feynmanState.reference = info.reference;
+  }
+
+  persistFeynman();
+  renderFeynman();
+}
+
+function syncFeynmanConcept() {
+  if (feynmanState.source === 'card') {
+    if (state.cards.length === 0) {
+      feynmanState.hint = t('feynman.hintNoCards');
+      return false;
+    }
+
+    const info = feynmanCardInfo(state.cards[feynmanCardIndex()]);
+    if (!info.concept) {
+      feynmanState.hint = t('feynman.hintChooseConcept');
+      return false;
+    }
+
+    feynmanState.concept = info.concept;
+    feynmanState.reference = info.reference;
+    return true;
+  }
+
+  const concept = els.feynmanConceptInput.value.trim();
+  if (concept.length < 2) {
+    feynmanState.hint = t('feynman.hintManualConcept');
+    return false;
+  }
+
+  feynmanState.concept = concept;
+  feynmanState.reference = els.feynmanReferenceInput.value.trim();
+  return true;
+}
+
+function syncFeynmanExplanation() {
+  if (!els.feynmanExplanation) return;
+
+  feynmanState.explanation = els.feynmanExplanation.value;
+  updateFeynmanCounters();
+}
+
+function goToFeynmanStep(step) {
+  const next = Math.min(3, Math.max(1, Number(step) || 1));
+  feynmanState.hint = '';
+  feynmanState.notice = '';
+
+  if (next >= 2) {
+    feynmanState.cardIndex = feynmanCardIndex();
+    if (!syncFeynmanConcept()) {
+      feynmanState.step = 1;
+      renderFeynman();
+      return;
+    }
+  }
+
+  if (next === 3) {
+    syncFeynmanExplanation();
+    if (countMeaningfulChars(feynmanState.explanation) < FEYNMAN_MIN_CHARS) {
+      feynmanState.step = 2;
+      feynmanState.hint = t('feynman.hintEmptyExplanation');
+      renderFeynman();
+      els.feynmanExplanation.focus({ preventScroll: true });
+      return;
+    }
+  }
+
+  feynmanState.step = next;
+  persistFeynman();
+  renderFeynman();
+
+  if (next === 2) {
+    els.feynmanExplanation.focus({ preventScroll: true });
+  }
+}
+
+function saveFeynmanPractice() {
+  syncFeynmanExplanation();
+  feynmanState.notice = '';
+  feynmanState.hint = '';
+
+  if (!syncFeynmanConcept()) {
+    feynmanState.step = 1;
+    renderFeynman();
+    return;
+  }
+
+  if (countMeaningfulChars(feynmanState.explanation) < FEYNMAN_MIN_CHARS) {
+    feynmanState.step = 2;
+    feynmanState.hint = t('feynman.hintEmptyExplanation');
+    renderFeynman();
+    return;
+  }
+
+  feynmanHistory = [
+    {
+      id: `fx-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      concept: feynmanState.concept,
+      explanation: feynmanState.explanation.trim(),
+      reference: feynmanState.reference.trim(),
+      source: feynmanState.source,
+      missing: analyzeFeynmanGaps(feynmanState.explanation, feynmanState.reference).missing,
+      checklist: { ...feynmanState.checklist },
+      createdAt: new Date().toISOString(),
+    },
+    ...feynmanHistory,
+  ].slice(0, FEYNMAN_HISTORY_LIMIT);
+
+  const saved = persistFeynman();
+  feynmanState.notice = saved ? t('feynman.savedNotice') : t('feynman.hintSaveQuota');
+  renderFeynman();
+}
+
+function loadFeynmanHistoryEntry(id) {
+  const entry = feynmanHistory.find((item) => item.id === id);
+  if (!entry) return;
+
+  feynmanState.source = 'manual';
+  feynmanState.concept = entry.concept;
+  feynmanState.reference = entry.reference;
+  feynmanState.explanation = entry.explanation;
+  feynmanState.checklist = normalizeFeynmanChecklist(entry.checklist);
+  feynmanState.step = 3;
+  feynmanState.hint = '';
+  feynmanState.notice = '';
+
+  persistFeynman();
+  renderFeynman();
+}
+
+function deleteFeynmanHistoryEntry(id) {
+  feynmanHistory = feynmanHistory.filter((entry) => entry.id !== id);
+  persistFeynman();
+  renderFeynman();
 }
 
 function dateStamp() {
@@ -3894,7 +4804,7 @@ function generate() {
         return;
       }
 
-      applyCards(cards);
+      applyCards(cards, { resetFeynman: true });
       els.studyPanels.scrollIntoView({ behavior: 'smooth', block: 'start' });
     } catch (error) {
       console.error('Gagal menyusun materi:', error);
@@ -3939,6 +4849,7 @@ function startOver() {
 
   disarmClear();
   clearSavedNotes();
+  clearFeynmanStore();
   els.saveStatus.classList.remove('is-visible');
 
   state.cards = [];
@@ -4047,8 +4958,20 @@ els.structuredRows.addEventListener('input', (event) => {
   scheduleSave();
 });
 
+els.structuredRows.addEventListener('mousedown', (event) => {
+  if (!(event.target instanceof Element)) return;
+  // Jangan biarkan fokus/selection textarea hilang saat tombol format diklik.
+  if (event.target.closest('[data-format]')) event.preventDefault();
+});
+
 els.structuredRows.addEventListener('click', (event) => {
   if (!(event.target instanceof Element)) return;
+
+  const formatButton = event.target.closest('[data-format]');
+  if (formatButton) {
+    applyRichFormat(formatButton);
+    return;
+  }
 
   const removeRow = event.target.closest('[data-remove-row]');
   if (removeRow) {
@@ -4152,6 +5075,89 @@ els.btnImport.addEventListener('click', () => els.fileInput.click());
 els.fileInput.addEventListener('change', handleFileChange);
 
 window.addEventListener('beforeunload', saveNotes);
+
+/* ---------- Metode Feynman (v12.0) ---------- */
+els.feynmanSourceButtons.forEach((button) => {
+  button.addEventListener('click', () => setFeynmanSource(button.dataset.feynmanSource));
+});
+
+els.feynmanCardSelect.addEventListener('change', () => {
+  feynmanState.cardIndex = feynmanCardIndex(els.feynmanCardSelect.value);
+  const info = feynmanCardInfo(state.cards[feynmanState.cardIndex]);
+  feynmanState.concept = info.concept;
+  feynmanState.reference = info.reference;
+  feynmanState.hint = '';
+  feynmanState.notice = '';
+  persistFeynman();
+  renderFeynman();
+});
+
+els.feynmanConceptInput.addEventListener('input', () => {
+  feynmanState.concept = els.feynmanConceptInput.value;
+  clearFeynmanHint();
+  queueFeynmanSave();
+});
+
+els.feynmanReferenceInput.addEventListener('input', () => {
+  feynmanState.reference = els.feynmanReferenceInput.value;
+  clearFeynmanHint();
+  queueFeynmanSave();
+});
+
+els.feynmanExplanation.addEventListener('input', () => {
+  syncFeynmanExplanation();
+  clearFeynmanHint();
+  feynmanState.notice = '';
+  queueFeynmanSave();
+});
+
+// Fokus & selection textarea tidak boleh hilang saat tombol format diklik.
+els.feynmanToolbar.addEventListener('mousedown', (event) => {
+  if (event.target instanceof Element && event.target.closest('[data-format]')) {
+    event.preventDefault();
+  }
+});
+
+els.feynmanToolbar.addEventListener('click', (event) => {
+  if (!(event.target instanceof Element)) return;
+
+  const button = event.target.closest('[data-format]');
+  if (button) applyRichFormat(button);
+});
+
+els.feynmanChecks.forEach((input) => {
+  input.addEventListener('change', () => {
+    feynmanState.checklist[input.dataset.feynmanCheck] = input.checked;
+    persistFeynman();
+  });
+});
+
+els.feynmanNext1.addEventListener('click', () => goToFeynmanStep(2));
+els.feynmanPrev2.addEventListener('click', () => goToFeynmanStep(1));
+els.feynmanNext2.addEventListener('click', () => goToFeynmanStep(3));
+els.feynmanPrev3.addEventListener('click', () => goToFeynmanStep(2));
+els.feynmanSave.addEventListener('click', saveFeynmanPractice);
+els.feynmanRestart.addEventListener('click', () => resetFeynmanDraft());
+
+els.feynmanHistoryList.addEventListener('click', (event) => {
+  if (!(event.target instanceof Element)) return;
+
+  const loadButton = event.target.closest('[data-feynman-load]');
+  if (loadButton) {
+    loadFeynmanHistoryEntry(loadButton.dataset.feynmanLoad);
+    return;
+  }
+
+  const deleteButton = event.target.closest('[data-feynman-delete]');
+  if (deleteButton) deleteFeynmanHistoryEntry(deleteButton.dataset.feynmanDelete);
+});
+
+window.addEventListener('beforeunload', () => {
+  if (!feynmanSaveTimer) return;
+  window.clearTimeout(feynmanSaveTimer);
+  feynmanSaveTimer = null;
+  persistFeynman();
+});
 
 els.flashcard.addEventListener('click', toggleFlip);
 els.flashcard.addEventListener('keydown', (event) => {
@@ -4375,3 +5381,4 @@ buildThemeOptions();
 applyTheme(currentTheme, { persist: false });
 applyLanguage(lang, { persist: false });
 restoreSavedInput();
+restoreFeynmanState();

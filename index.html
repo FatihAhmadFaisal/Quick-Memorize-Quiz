@@ -272,6 +272,7 @@
           <li data-i18n="structured.tips.three">Istilah boleh sama asalkan foto atau jawabannya berbeda; hanya soal yang benar-benar kembar yang ditolak.</li>
           <li data-i18n="structured.tips.four">Setiap kotak bisa berisi teks, foto, atau keduanya. Foto dikompres otomatis.</li>
           <li data-i18n="structured.tips.five">Data formulir dan fotonya tersimpan otomatis di browser ini.</li>
+          <li data-i18n="structured.tips.six">Tulis **tebal**, *miring*, x^2, atau H_2O — atau pakai tombol format di tiap kotak.</li>
         </ul>
       </div>
     </section>
@@ -305,6 +306,10 @@
           <div class="flex items-start gap-3 rounded-xl bg-white/80 px-4 py-3 ring-1 ring-slate-200/70">
             <span class="accent-mark mt-0.5">◆</span>
             <span data-i18n-html="empty.f3"><strong class="font-semibold text-slate-700">Skor otomatis.</strong> Pantau hasil belajarmu.</span>
+          </div>
+          <div class="flex items-start gap-3 rounded-xl bg-white/80 px-4 py-3 ring-1 ring-slate-200/70">
+            <span class="accent-mark mt-0.5">◆</span>
+            <span data-i18n-html="empty.f4"><strong class="font-semibold text-slate-700">Metode Feynman.</strong> Jelaskan konsep dengan bahasamu sendiri.</span>
           </div>
         </div>
       </div>
@@ -348,6 +353,18 @@
               data-i18n="tabs.tf"
             >
               True / False
+            </button>
+            <button
+              type="button"
+              class="tab-btn"
+              data-tab="feynman"
+              role="tab"
+              id="tab-btn-feynman"
+              aria-selected="false"
+              aria-controls="tab-feynman"
+              data-i18n="tabs.feynman"
+            >
+              Feynman
             </button>
           </div>
 
@@ -657,6 +674,189 @@
               </button>
               <button id="btn-tf-new" type="button" class="nav-btn w-full justify-center px-4 py-2.5 sm:w-auto" data-i18n="action.new">Catatan baru</button>
             </div>
+          </div>
+        </div>
+
+        <!-- ---------- FEYNMAN MODE ---------- -->
+        <div id="tab-feynman" role="tabpanel" aria-labelledby="tab-btn-feynman" class="hidden">
+          <div class="panel p-4 sm:p-7">
+            <div class="feynman-header">
+              <div class="min-w-0">
+                <p class="accent-label text-xs font-bold uppercase tracking-[0.18em]" data-i18n="feynman.label">Metode Feynman</p>
+                <h2 class="mt-1 text-lg font-extrabold text-slate-900 sm:text-xl" data-i18n="feynman.title">Ajari orang lain, bukan menghafal</h2>
+                <p class="mt-1 max-w-xl text-xs leading-relaxed text-slate-500 sm:text-sm" data-i18n="feynman.desc">
+                  Pilih satu konsep, jelaskan dengan bahasamu sendiri, lalu bandingkan dengan catatan asli untuk menemukan celah pemahaman.
+                </p>
+              </div>
+              <ol class="feynman-steps" aria-label="Langkah Feynman" data-i18n-aria="feynman.stepsAria">
+                <li class="feynman-step-pill is-active" data-feynman-step="1">
+                  <span class="feynman-step-number" aria-hidden="true">1</span>
+                  <span data-i18n="feynman.step1Short">Pilih konsep</span>
+                </li>
+                <li class="feynman-step-pill" data-feynman-step="2">
+                  <span class="feynman-step-number" aria-hidden="true">2</span>
+                  <span data-i18n="feynman.step2Short">Jelaskan</span>
+                </li>
+                <li class="feynman-step-pill" data-feynman-step="3">
+                  <span class="feynman-step-number" aria-hidden="true">3</span>
+                  <span data-i18n="feynman.step3Short">Review</span>
+                </li>
+              </ol>
+            </div>
+
+            <p id="feynman-hint" class="form-hint hidden" role="alert"></p>
+
+            <!-- Langkah 1 -->
+            <section id="feynman-step-1" class="feynman-step" aria-labelledby="feynman-step-1-title">
+              <h3 id="feynman-step-1-title" class="feynman-step-title" data-i18n="feynman.step1Title">1. Pilih atau tulis konsep</h3>
+              <p class="feynman-step-desc" data-i18n="feynman.step1Desc">
+                Gunakan konsep dari flashcard yang sudah kamu buat, atau tulis konsep baru yang ingin kamu uji.
+              </p>
+
+              <div class="feynman-source-switch" role="group" aria-label="Sumber konsep" data-i18n-aria="feynman.sourceAria">
+                <button type="button" class="feynman-source-btn is-active" data-feynman-source="card" aria-pressed="true" data-i18n="feynman.sourceCard">
+                  Dari flashcard
+                </button>
+                <button type="button" class="feynman-source-btn" data-feynman-source="manual" aria-pressed="false" data-i18n="feynman.sourceManual">
+                  Tulis manual
+                </button>
+              </div>
+
+              <div id="feynman-card-picker" class="feynman-field">
+                <label for="feynman-card-select" class="feynman-label" data-i18n="feynman.cardLabel">Pilih konsep</label>
+                <select id="feynman-card-select" class="feynman-select"></select>
+                <p id="feynman-card-empty" class="feynman-note hidden" data-i18n="feynman.cardEmpty">
+                  Belum ada flashcard. Tulis konsep secara manual.
+                </p>
+              </div>
+
+              <div id="feynman-manual-picker" class="feynman-field hidden">
+                <label for="feynman-concept-input" class="feynman-label" data-i18n="feynman.manualLabel">Judul konsep</label>
+                <input
+                  id="feynman-concept-input"
+                  type="text"
+                  class="feynman-input"
+                  maxlength="120"
+                  autocomplete="off"
+                  placeholder="Contoh: Hukum Newton II"
+                  data-i18n-placeholder="feynman.manualPlaceholder"
+                />
+
+                <label for="feynman-reference-input" class="feynman-label mt-4" data-i18n="feynman.referenceLabel">
+                  Catatan asli / kunci jawaban (opsional)
+                </label>
+                <textarea
+                  id="feynman-reference-input"
+                  class="feynman-input feynman-input--small"
+                  rows="3"
+                  placeholder="Tempel jawaban dari catatanmu di sini agar bisa dibandingkan."
+                  data-i18n-placeholder="feynman.referencePlaceholder"
+                ></textarea>
+                <p class="feynman-note" data-i18n="feynman.referenceHint">
+                  Kalau dikosongkan, langkah review tetap bisa dilakukan tanpa pembanding.
+                </p>
+              </div>
+
+              <div class="feynman-actions">
+                <button id="feynman-next-1" type="button" class="next-btn feynman-primary" data-i18n="feynman.nextExplain">Lanjut: jelaskan</button>
+              </div>
+            </section>
+
+            <!-- Langkah 2 -->
+            <section id="feynman-step-2" class="feynman-step hidden" aria-labelledby="feynman-step-2-title">
+              <h3 id="feynman-step-2-title" class="feynman-step-title" data-i18n="feynman.step2Title">2. Jelaskan dengan bahasa sederhana</h3>
+              <p class="feynman-step-desc" data-i18n="feynman.step2Desc">
+                Jelaskan konsep ini dengan bahasa sederhana seolah-olah kamu sedang mengajar orang lain.
+              </p>
+
+              <p id="feynman-concept-badge" class="feynman-concept-chip"></p>
+
+              <div id="feynman-toolbar" class="structured-toolbar"></div>
+              <label for="feynman-explanation" class="sr-only" data-i18n="feynman.explanationLabel">Penjelasanmu</label>
+              <textarea
+                id="feynman-explanation"
+                class="feynman-textarea"
+                rows="9"
+                placeholder="Mulai dari ide besarnya, lalu jelaskan dengan kata-katamu sendiri..."
+                data-i18n-placeholder="feynman.explanationPlaceholder"
+              ></textarea>
+
+              <div class="feynman-meta">
+                <span id="feynman-char-count">0 karakter</span>
+                <span data-i18n="feynman.richHint">Boleh pakai **tebal**, *miring*, x^2, atau H_2O.</span>
+              </div>
+
+              <div class="feynman-actions feynman-actions--split">
+                <button id="feynman-prev-2" type="button" class="nav-btn" data-i18n="feynman.back">Kembali</button>
+                <button id="feynman-next-2" type="button" class="next-btn" data-i18n="feynman.nextReview">Lanjut: review</button>
+              </div>
+            </section>
+
+            <!-- Langkah 3 -->
+            <section id="feynman-step-3" class="feynman-step hidden" aria-labelledby="feynman-step-3-title">
+              <h3 id="feynman-step-3-title" class="feynman-step-title" data-i18n="feynman.step3Title">3. Review &amp; temukan celah</h3>
+              <p class="feynman-step-desc" data-i18n="feynman.step3Desc">
+                Bandingkan penjelasanmu dengan catatan asli, lalu tandai hal yang masih perlu diperbaiki.
+              </p>
+
+              <div class="feynman-compare">
+                <article class="feynman-compare-card feynman-compare-card--user">
+                  <h4 data-i18n="feynman.yourExplanation">Penjelasanmu</h4>
+                  <div id="feynman-user-text" class="feynman-compare-text rich-text"></div>
+                </article>
+                <article class="feynman-compare-card feynman-compare-card--source">
+                  <h4 data-i18n="feynman.originalNotes">Catatan asli</h4>
+                  <div id="feynman-reference-text" class="feynman-compare-text rich-text"></div>
+                </article>
+              </div>
+
+              <div id="feynman-gap-box" class="feynman-gap-box">
+                <h4 class="feynman-gap-title" data-i18n="feynman.gapTitle">Analisis celah otomatis</h4>
+                <p id="feynman-gap-text" class="feynman-gap-text"></p>
+                <div id="feynman-gap-chips" class="feynman-chips"></div>
+              </div>
+
+              <fieldset class="feynman-checklist">
+                <legend data-i18n="feynman.checklistTitle">Evaluasi mandiri</legend>
+                <label class="feynman-check">
+                  <input type="checkbox" data-feynman-check="simple" />
+                  <span data-i18n="feynman.checkSimple">Penjelasannya sudah sederhana dan mudah dipahami.</span>
+                </label>
+                <label class="feynman-check">
+                  <input type="checkbox" data-feynman-check="jargon" />
+                  <span data-i18n="feynman.checkJargon">Tidak ada istilah rumit yang belum dijelaskan.</span>
+                </label>
+                <label class="feynman-check">
+                  <input type="checkbox" data-feynman-check="example" />
+                  <span data-i18n="feynman.checkExample">Ada contoh atau analogi yang membantu.</span>
+                </label>
+                <label class="feynman-check">
+                  <input type="checkbox" data-feynman-check="complete" />
+                  <span data-i18n="feynman.checkComplete">Ide utamanya sudah tercakup semua.</span>
+                </label>
+              </fieldset>
+
+              <div class="feynman-actions feynman-actions--split">
+                <button id="feynman-prev-3" type="button" class="nav-btn" data-i18n="feynman.editExplanation">Ubah penjelasan</button>
+                <div class="feynman-action-group">
+                  <button id="feynman-restart" type="button" class="nav-btn" data-i18n="feynman.newConcept">Konsep baru</button>
+                  <button id="feynman-save" type="button" class="next-btn" data-i18n="feynman.save">Simpan latihan</button>
+                </div>
+              </div>
+              <p id="feynman-save-notice" class="feynman-save-notice hidden" role="status" aria-live="polite"></p>
+            </section>
+
+            <!-- Riwayat -->
+            <section class="feynman-history" aria-labelledby="feynman-history-title">
+              <div class="feynman-history-head">
+                <h3 id="feynman-history-title" data-i18n="feynman.historyTitle">Riwayat latihan</h3>
+                <span id="feynman-history-count" class="feynman-history-count">0</span>
+              </div>
+              <p id="feynman-history-empty" class="feynman-note" data-i18n="feynman.historyEmpty">
+                Belum ada latihan tersimpan. Simpan hasil review untuk melihat riwayat di sini.
+              </p>
+              <ul id="feynman-history-list" class="feynman-history-list"></ul>
+            </section>
           </div>
         </div>
       </div>
