@@ -725,6 +725,7 @@
               <div id="feynman-card-picker" class="feynman-field">
                 <label for="feynman-card-select" class="feynman-label" data-i18n="feynman.cardLabel">Pilih konsep</label>
                 <select id="feynman-card-select" class="feynman-select"></select>
+                <div id="feynman-card-preview" class="feynman-card-preview hidden" aria-live="polite"></div>
                 <p id="feynman-card-empty" class="feynman-note hidden" data-i18n="feynman.cardEmpty">
                   Belum ada flashcard. Tulis konsep secara manual.
                 </p>
@@ -769,7 +770,15 @@
                 Jelaskan konsep ini dengan bahasa sederhana seolah-olah kamu sedang mengajar orang lain.
               </p>
 
-              <p id="feynman-concept-badge" class="feynman-concept-chip"></p>
+              <div class="feynman-concept-visual">
+                <figure id="feynman-concept-figure" class="feynman-concept-figure hidden">
+                  <img id="feynman-concept-image" class="feynman-concept-image" alt="" decoding="async" />
+                  <figcaption class="feynman-concept-caption" data-i18n="feynman.cardImageCaption">Gambar dari kartu</figcaption>
+                </figure>
+                <div class="feynman-concept-body">
+                  <p id="feynman-concept-badge" class="feynman-concept-chip"></p>
+                </div>
+              </div>
 
               <div id="feynman-toolbar" class="structured-toolbar"></div>
               <label for="feynman-explanation" class="sr-only" data-i18n="feynman.explanationLabel">Penjelasanmu</label>
@@ -807,6 +816,10 @@
                 <article class="feynman-compare-card feynman-compare-card--source">
                   <h4 data-i18n="feynman.originalNotes">Catatan asli</h4>
                   <div id="feynman-reference-text" class="feynman-compare-text rich-text"></div>
+                  <figure id="feynman-reference-figure" class="feynman-reference-figure hidden">
+                    <img id="feynman-reference-image" class="feynman-reference-image" alt="" decoding="async" loading="lazy" />
+                    <figcaption class="feynman-reference-caption" data-i18n="feynman.answerImageCaption">Gambar jawaban asli</figcaption>
+                  </figure>
                 </article>
               </div>
 

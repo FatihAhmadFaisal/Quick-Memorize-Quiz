@@ -317,6 +317,13 @@ const TRANSLATIONS = {
     'feynman.sourceManual': 'Tulis manual',
     'feynman.cardLabel': 'Pilih konsep',
     'feynman.cardEmpty': 'Belum ada flashcard. Tulis konsep secara manual.',
+    'feynman.cardImageOption': ' (bergambar)',
+    'feynman.cardImageAlt': 'Gambar pada kartu “{concept}”',
+    'feynman.answerImageAlt': 'Gambar jawaban asli untuk “{concept}”',
+    'feynman.cardImageCaption': 'Gambar dari kartu',
+    'feynman.answerImageCaption': 'Gambar jawaban asli',
+    'feynman.previewLabel': 'Pratinjau kartu',
+    'feynman.previewHint': 'Gambar ini bagian dari pertanyaan, bukan jawabannya.',
     'feynman.manualLabel': 'Judul konsep',
     'feynman.manualPlaceholder': 'Contoh: Hukum Newton II',
     'feynman.referenceLabel': 'Catatan asli / kunci jawaban (opsional)',
@@ -343,6 +350,7 @@ const TRANSLATIONS = {
     'feynman.gapAllGood': 'Semua kata kunci utama dari catatan asli sudah muncul di penjelasanmu.',
     'feynman.gapFound': '{n} kata kunci dari catatan asli belum muncul. Coba jelaskan juga:',
     'feynman.gapNoReference': 'Tambahkan catatan asli (opsional) di langkah 1 untuk melihat analisis celah.',
+    'feynman.gapImageOnly': 'Catatan asli untuk konsep ini berupa gambar, jadi analisis kata kunci tidak tersedia. Bandingkan gambarnya secara manual.',
     'feynman.gapShort': 'Penjelasanmu masih pendek. Tambahkan ide utama dan contoh agar lebih jelas.',
     'feynman.gapKeywordAria': 'Kata kunci yang belum muncul: {word}',
     'feynman.checklistTitle': 'Evaluasi mandiri',
@@ -581,6 +589,13 @@ const TRANSLATIONS = {
     'feynman.sourceManual': 'Type manually',
     'feynman.cardLabel': 'Pick a concept',
     'feynman.cardEmpty': 'There are no flashcards yet. Type a concept manually.',
+    'feynman.cardImageOption': ' (has image)',
+    'feynman.cardImageAlt': 'Image from the “{concept}” card',
+    'feynman.answerImageAlt': 'Original answer image for “{concept}”',
+    'feynman.cardImageCaption': 'Image from the card',
+    'feynman.answerImageCaption': 'Original answer image',
+    'feynman.previewLabel': 'Card preview',
+    'feynman.previewHint': 'This image is part of the prompt, not the answer.',
     'feynman.manualLabel': 'Concept title',
     'feynman.manualPlaceholder': 'Example: Newton’s second law',
     'feynman.referenceLabel': 'Original notes / answer key (optional)',
@@ -607,6 +622,7 @@ const TRANSLATIONS = {
     'feynman.gapAllGood': 'Every main keyword from the original notes appears in your explanation.',
     'feynman.gapFound': '{n} keywords from the original notes are missing. Try explaining these too:',
     'feynman.gapNoReference': 'Add original notes (optional) in step 1 to see a gap analysis.',
+    'feynman.gapImageOnly': 'The original notes for this concept are an image, so keyword analysis is not available. Compare the images manually.',
     'feynman.gapShort': 'Your explanation is still short. Add the main idea and an example to make it clearer.',
     'feynman.gapKeywordAria': 'Missing keyword: {word}',
     'feynman.checklistTitle': 'Self-assessment',
@@ -773,7 +789,7 @@ const state = {
 let generateTimer = null;
 let structuredRowSeed = 0;
 
-/* ---------- Status Metode Feynman (v12.0) ---------- */
+/* ---------- Status Metode Feynman (v12.0–v12.1) ---------- */
 const FEYNMAN_CHECK_KEYS = ['simple', 'jargon', 'example', 'complete'];
 
 const feynmanState = {
@@ -866,14 +882,20 @@ const els = {
   feynmanManualPicker: $('#feynman-manual-picker'),
   feynmanCardSelect: $('#feynman-card-select'),
   feynmanCardEmpty: $('#feynman-card-empty'),
+  feynmanCardPreview: $('#feynman-card-preview'),
   feynmanConceptInput: $('#feynman-concept-input'),
   feynmanReferenceInput: $('#feynman-reference-input'),
+  feynmanConceptVisual: $('.feynman-concept-visual'),
+  feynmanConceptFigure: $('#feynman-concept-figure'),
+  feynmanConceptImage: $('#feynman-concept-image'),
   feynmanConceptBadge: $('#feynman-concept-badge'),
   feynmanToolbar: $('#feynman-toolbar'),
   feynmanExplanation: $('#feynman-explanation'),
   feynmanCharCount: $('#feynman-char-count'),
   feynmanUserText: $('#feynman-user-text'),
   feynmanReferenceText: $('#feynman-reference-text'),
+  feynmanReferenceFigure: $('#feynman-reference-figure'),
+  feynmanReferenceImage: $('#feynman-reference-image'),
   feynmanGapText: $('#feynman-gap-text'),
   feynmanGapChips: $('#feynman-gap-chips'),
   feynmanChecks: Array.from(document.querySelectorAll('[data-feynman-check]')),
@@ -3989,7 +4011,7 @@ function restoreSavedInput() {
 }
 
 /* ============================================================
-   Metode Feynman (v12.0)
+   Metode Feynman (v12.0–v12.1)
    ============================================================ */
 
 function feynmanCardIndex(value = feynmanState.cardIndex) {
@@ -4001,16 +4023,32 @@ function feynmanCardIndex(value = feynmanState.cardIndex) {
   return Math.min(Math.max(index, 0), max);
 }
 
-/** Ambil judul konsep dan kunci jawaban dari sebuah kartu. */
+/** Ambil judul konsep, kunci jawaban, dan gambar dari sebuah kartu. */
 function feynmanCardInfo(card) {
-  if (!card) return { concept: '', reference: '' };
+  if (!card) {
+    return { concept: '', reference: '', image: '', referenceImage: '' };
+  }
 
   const reference = String(card.definition ?? card.source ?? '').trim();
   const concept = String(card.term ?? '').trim()
     || richTextToText(reference).slice(0, 80)
     || t('feynman.untitled');
 
-  return { concept, reference };
+  return {
+    concept,
+    reference,
+    image: normalizeImageValue(card.termImage),
+    referenceImage: normalizeImageValue(card.definitionImage),
+  };
+}
+
+/**
+ * Kartu yang sedang dipakai Feynman. Gambar hanya diambil dari kartu asli,
+ * bukan dari state, supaya draf dan riwayat tetap ringan tanpa base64.
+ */
+function activeFeynmanCard() {
+  if (feynmanState.source !== 'card') return null;
+  return state.cards[feynmanCardIndex()] || null;
 }
 
 /** Ubah teks ber-markup menjadi teks polos untuk analisis celah. */
@@ -4232,12 +4270,74 @@ function renderFeynmanCardOptions() {
   els.feynmanCardSelect.disabled = !hasCards;
   els.feynmanCardSelect.innerHTML = hasCards
     ? state.cards
-      .map((card, index) => `<option value="${index}">${escapeHtml(feynmanCardInfo(card).concept)}</option>`)
+      .map((card, index) => {
+        const info = feynmanCardInfo(card);
+        const label = info.image ? `${info.concept}${t('feynman.cardImageOption')}` : info.concept;
+        return `<option value="${index}">${escapeHtml(label)}</option>`;
+      })
       .join('')
     : `<option value="0">${escapeHtml(t('feynman.cardEmpty'))}</option>`;
 
   els.feynmanCardSelect.value = String(feynmanCardIndex());
   els.feynmanCardEmpty.classList.toggle('hidden', hasCards);
+}
+
+/**
+ * Pratinjau gambar kartu di langkah 1. Kalau kartu tidak punya gambar,
+ * seluruh blok disembunyikan supaya tidak menyisakan ruang kosong.
+ */
+function renderFeynmanCardPreview() {
+  if (!els.feynmanCardPreview) return;
+
+  const info = feynmanCardInfo(activeFeynmanCard());
+  const hasImage = Boolean(info.image);
+
+  els.feynmanCardPreview.classList.toggle('hidden', !hasImage);
+  if (!hasImage) {
+    els.feynmanCardPreview.innerHTML = '';
+    return;
+  }
+
+  els.feynmanCardPreview.innerHTML = `
+    <figure class="feynman-preview-figure">
+      ${imageMarkup(info.image, {
+        alt: t('feynman.cardImageAlt', { concept: info.concept }),
+        className: 'feynman-preview-image',
+      })}
+      <figcaption class="feynman-preview-caption">${escapeHtml(t('feynman.cardImageCaption'))}</figcaption>
+    </figure>
+    <div class="feynman-preview-body">
+      <p class="feynman-preview-label">${escapeHtml(t('feynman.previewLabel'))}</p>
+      <p class="feynman-preview-text rich-text">${formatRichText(info.concept)}</p>
+      <p class="feynman-preview-hint">${escapeHtml(t('feynman.previewHint'))}</p>
+    </div>`;
+}
+
+/** Tampilkan gambar kartu di samping label konsep pada langkah 2. */
+function renderFeynmanConceptVisual() {
+  if (!els.feynmanConceptBadge) return;
+
+  const concept = feynmanState.concept.trim();
+  const info = feynmanCardInfo(activeFeynmanCard());
+  const image = concept ? info.image : '';
+
+  els.feynmanConceptBadge.innerHTML = formatRichText(
+    concept ? t('feynman.conceptBadge', { concept }) : t('feynman.hintChooseConcept'),
+  );
+  els.feynmanConceptBadge.classList.toggle('is-empty', !concept);
+
+  if (!els.feynmanConceptVisual || !els.feynmanConceptFigure || !els.feynmanConceptImage) return;
+
+  els.feynmanConceptFigure.classList.toggle('hidden', !image);
+  els.feynmanConceptVisual.classList.toggle('has-image', Boolean(image));
+
+  if (image) {
+    els.feynmanConceptImage.src = image;
+    els.feynmanConceptImage.alt = t('feynman.cardImageAlt', { concept: info.concept });
+  } else {
+    els.feynmanConceptImage.removeAttribute('src');
+    els.feynmanConceptImage.alt = '';
+  }
 }
 
 function renderFeynmanChecklist() {
@@ -4251,6 +4351,8 @@ function renderFeynmanReview() {
 
   const explanation = feynmanState.explanation.trim();
   const reference = feynmanState.reference.trim();
+  const info = feynmanCardInfo(activeFeynmanCard());
+  const referenceImage = info.referenceImage;
   const analysis = analyzeFeynmanGaps(feynmanState.explanation, feynmanState.reference);
 
   els.feynmanUserText.innerHTML = explanation
@@ -4259,10 +4361,24 @@ function renderFeynmanReview() {
 
   els.feynmanReferenceText.innerHTML = reference
     ? formatRichText(reference)
-    : `<span class="feynman-placeholder">${escapeHtml(t('feynman.noReference'))}</span>`;
+    : (referenceImage ? '' : `<span class="feynman-placeholder">${escapeHtml(t('feynman.noReference'))}</span>`);
+
+  if (els.feynmanReferenceFigure && els.feynmanReferenceImage) {
+    els.feynmanReferenceFigure.classList.toggle('hidden', !referenceImage);
+
+    if (referenceImage) {
+      els.feynmanReferenceImage.src = referenceImage;
+      els.feynmanReferenceImage.alt = t('feynman.answerImageAlt', { concept: info.concept });
+    } else {
+      els.feynmanReferenceImage.removeAttribute('src');
+      els.feynmanReferenceImage.alt = '';
+    }
+  }
 
   if (!reference) {
-    els.feynmanGapText.textContent = t('feynman.gapNoReference');
+    els.feynmanGapText.textContent = referenceImage
+      ? t('feynman.gapImageOnly')
+      : t('feynman.gapNoReference');
     els.feynmanGapChips.innerHTML = '';
     return;
   }
@@ -4380,11 +4496,8 @@ function renderFeynman() {
 
   els.feynmanToolbar.innerHTML = formatToolbarMarkup('feynman-explanation');
 
-  const concept = feynmanState.concept.trim();
-  els.feynmanConceptBadge.textContent = concept
-    ? t('feynman.conceptBadge', { concept })
-    : t('feynman.hintChooseConcept');
-  els.feynmanConceptBadge.classList.toggle('is-empty', !concept);
+  renderFeynmanCardPreview();
+  renderFeynmanConceptVisual();
 
   updateFeynmanCounters();
   renderFeynmanChecklist();
@@ -4849,12 +4962,12 @@ function startOver() {
 
   disarmClear();
   clearSavedNotes();
-  clearFeynmanStore();
   els.saveStatus.classList.remove('is-visible');
 
   state.cards = [];
   state.quiz = [];
   state.tf = [];
+  clearFeynmanStore();
   state.cardIndex = 0;
   state.quizIndex = 0;
   state.score = 0;
@@ -4882,6 +4995,7 @@ function startOver() {
   els.studyPanels.classList.add('hidden');
   els.studyEmpty.classList.remove('hidden');
   updateStats();
+  renderFeynman();
   focusActiveInput();
 }
 
@@ -5076,7 +5190,7 @@ els.fileInput.addEventListener('change', handleFileChange);
 
 window.addEventListener('beforeunload', saveNotes);
 
-/* ---------- Metode Feynman (v12.0) ---------- */
+/* ---------- Metode Feynman (v12.0–v12.1) ---------- */
 els.feynmanSourceButtons.forEach((button) => {
   button.addEventListener('click', () => setFeynmanSource(button.dataset.feynmanSource));
 });

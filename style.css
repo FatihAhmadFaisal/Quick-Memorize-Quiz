@@ -2119,6 +2119,122 @@ html {
   margin-top: 1rem;
 }
 
+/* ---------- Gambar kartu di Feynman (v12.1) ---------- */
+.feynman-card-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  margin-top: 0.7rem;
+  border-radius: 1rem;
+  border: 1px solid var(--accent-border);
+  background: linear-gradient(155deg, #fff 0%, var(--accent-wash) 100%);
+  padding: 0.7rem;
+  animation: rowIn 0.2s ease both;
+}
+
+.feynman-card-preview.hidden,
+.feynman-concept-figure.hidden,
+.feynman-reference-figure.hidden {
+  display: none;
+}
+
+.feynman-preview-figure {
+  flex: 0 0 auto;
+  width: clamp(6rem, 34%, 12rem);
+  margin: 0;
+}
+
+.feynman-preview-image,
+.feynman-concept-image,
+.feynman-reference-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 12rem;
+  object-fit: contain;
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+  background: #fff;
+}
+
+.feynman-preview-caption,
+.feynman-concept-caption,
+.feynman-reference-caption {
+  margin-top: 0.3rem;
+  font-size: 0.625rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: rgb(148 163 184);
+  text-align: center;
+}
+
+.feynman-preview-body {
+  min-width: 0;
+  flex: 1 1 10rem;
+}
+
+.feynman-preview-label {
+  font-size: 0.625rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+
+.feynman-preview-text {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: #0f172a;
+  overflow-wrap: anywhere;
+}
+
+.feynman-preview-hint {
+  margin-top: 0.25rem;
+  font-size: 0.6875rem;
+  line-height: 1.55;
+  color: rgb(148 163 184);
+}
+
+.feynman-concept-visual {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.feynman-concept-figure {
+  flex: 0 0 auto;
+  width: clamp(7rem, 38%, 14rem);
+  margin: 0;
+}
+
+.feynman-concept-body {
+  min-width: 0;
+  flex: 1 1 12rem;
+}
+
+.feynman-concept-visual .feynman-concept-chip {
+  margin-top: 0;
+}
+
+.feynman-reference-figure {
+  max-width: 22rem;
+  margin: 0.75rem auto 0;
+  border-radius: 0.85rem;
+  border: 1px solid rgb(226 232 240);
+  background: #fff;
+  padding: 0.45rem;
+}
+
+.feynman-reference-image {
+  max-height: 15rem;
+  border: none;
+  background: transparent;
+}
+
 .feynman-label {
   display: block;
   font-size: 0.75rem;
@@ -2798,6 +2914,37 @@ html {
   .feynman-select,
   .feynman-input {
     min-height: 2.75rem;
+  }
+
+  /* Gambar kartu: menumpuk agar tetap besar dan terbaca di layar sempit */
+  .feynman-card-preview,
+  .feynman-concept-visual {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .feynman-preview-figure,
+  .feynman-concept-figure {
+    width: 100%;
+  }
+
+  /* Di layout kolom, flex-basis akan menjadi tinggi—netralkan */
+  .feynman-preview-body,
+  .feynman-concept-body {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .feynman-preview-image,
+  .feynman-concept-image,
+  .feynman-reference-image {
+    max-height: 13rem;
+  }
+
+  .feynman-preview-caption,
+  .feynman-concept-caption,
+  .feynman-reference-caption {
+    font-size: 0.6875rem;
   }
 
   .feynman-actions .next-btn,
